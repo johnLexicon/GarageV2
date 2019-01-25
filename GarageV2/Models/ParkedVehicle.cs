@@ -35,7 +35,7 @@ namespace GarageV2.Models
         [Display(Name = "Registreringsnummber")]
         public string RegNo { get; set; }
         [Display(Name = "Fordonstyp")]
-        public string Type { get; set; }
+        public VehicleType Type { get; set; }
         [Display(Name = "Färg")]
         public string Color { get; set; }
         [Display(Name = "Märke")]
