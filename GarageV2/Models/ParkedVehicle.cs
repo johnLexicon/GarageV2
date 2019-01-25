@@ -32,7 +32,7 @@ namespace GarageV2.Models
     {
 
         public int Id { get; set; }
-        [Display(Name = "Registreringsnummber")]
+        [Display(Name = "Reg-nummer")]
         public string RegNo { get; set; }
         [Display(Name = "Fordonstyp")]
         public VehicleType Type { get; set; }
@@ -45,6 +45,7 @@ namespace GarageV2.Models
         [Display(Name = "Antal däck")]
         public int NoWheels { get; set; }
         [Timestamp]
+        [Display(Name = "Incheckning")]
         public byte[] TimeStamp { get; set; }
     }
 }

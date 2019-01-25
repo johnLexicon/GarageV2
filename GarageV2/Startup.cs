@@ -62,7 +62,7 @@ namespace GarageV2
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=ParkedVehicles}/{action=Index}/{id?}");
+                    template: "{controller=ParkedVehicles}/{action=Index}/{searchString?}");
             });
         }
     }

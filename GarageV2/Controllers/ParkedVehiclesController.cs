@@ -19,10 +19,26 @@ namespace GarageV2.Controllers
         }
 
         // GET: ParkedVehicles
+        /*
         public async Task<IActionResult> Index()
         {
             return View(await _context.ParkedVehicle.ToListAsync());
         }
+        */
+        // Get: Search Products
+        public async Task<IActionResult> Index(string searchString)
+        {
+            var model = from m in _context.ParkedVehicle
+                        select m;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                model = _context.ParkedVehicle.Where(pv => pv.RegNo.Contains(searchString));
+            }
+
+            return View(await model.ToListAsync());
+        }
+
 
         // GET: ParkedVehicles/Details/5
         public async Task<IActionResult> Details(int? id)
