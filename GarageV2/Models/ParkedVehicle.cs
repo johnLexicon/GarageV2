@@ -20,6 +20,13 @@ namespace GarageV2.Models
         [Display(Name = "Cykel")]
         Bicycle
     }
+    //public enum vehicleModel
+    //{
+    //    Sedan,
+    //    Hardtop,
+    //    Cabrolie,
+    //    Other
+    //}
 
     public class ParkedVehicle
     {
@@ -28,7 +35,7 @@ namespace GarageV2.Models
         [Display(Name = "Registreringsnummber")]
         public string RegNo { get; set; }
         [Display(Name = "Fordonstyp")]
-        public VehicleType Type { get; set; }
+        public string Type { get; set; }
         [Display(Name = "Färg")]
         public string Color { get; set; }
         [Display(Name = "Märke")]
