@@ -33,11 +33,7 @@ namespace GarageV2
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
-            services.AddDbContext<GarageV2Context>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("GarageV2Context")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,12 +54,8 @@ namespace GarageV2
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=ParkedVehicles}/{action=Index}/{searchString?}");
-            });
+            app.UseMvc();
+
         }
     }
 }
