@@ -20,32 +20,31 @@ namespace GarageV2.Models
         [Display(Name = "Cykel")]
         Bicycle
     }
-    //public enum vehicleModel
-    //{
-    //    Sedan,
-    //    Hardtop,
-    //    Cabrolie,
-    //    Other
-    //}
 
     public class ParkedVehicle
     {
 
         public int Id { get; set; }
+
         [Display(Name = "Reg-nummer")]
         public string RegNo { get; set; }
+
         [Display(Name = "Fordonstyp")]
         public VehicleType Type { get; set; }
+
         [Display(Name = "Färg")]
         public string Color { get; set; }
+
         [Display(Name = "Märke")]
         public string Brand { get; set; }
+
         [Display(Name = "Modell")]
         public string Model { get; set; }
+
         [Display(Name = "Antal däck")]
         public int NoWheels { get; set; }
-        [Timestamp]
+
         [Display(Name = "Incheckning")]
-        public byte[] TimeStamp { get; set; }
+        public DateTime CheckIn { get; set; }
     }
 }
