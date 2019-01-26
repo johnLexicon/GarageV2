@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using GarageV2.Models;
 using GarageV2.Services;
+using AutoMapper;
 
 namespace GarageV2
 {
@@ -27,6 +28,9 @@ namespace GarageV2
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //For mapping objects like models to viewmodels.
+            services.AddAutoMapper();
+
             //TODO: Change to Scoped when using EF.
             services.AddSingleton<IVehiclesData, VehiclesMockRepository>();
 
