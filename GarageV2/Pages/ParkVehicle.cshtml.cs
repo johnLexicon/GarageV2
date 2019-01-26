@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GarageV2.Models;
+using GarageV2.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -14,6 +15,12 @@ namespace GarageV2.Pages
         [BindProperty]
         public ParkedVehicle ParkedVehicle { get; set;  }
 
+
+        public ParkVehicleModel(IVehiclesData vehiclesData)
+        {
+            _vehiclesData = vehiclesData;
+        }
+
         public void OnGet()
         {
         }
@@ -23,10 +30,16 @@ namespace GarageV2.Pages
 
             if (ModelState.IsValid)
             {
-                return new RedirectToPageResult("VehicleDetails");
+                var addedVehicle = _vehiclesData.AddVehicle(ParkedVehicle);
+
+                //TODO: Add functionality for addedVehicle == null
+
+                return new RedirectToPageResult("VehicleDetails", addedVehicle);
             }
 
             return Page();
         }
+
+        private readonly IVehiclesData _vehiclesData;
     }
 }

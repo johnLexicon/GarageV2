@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using GarageV2.Models;
+using GarageV2.Services;
 
 namespace GarageV2
 {
@@ -26,6 +27,9 @@ namespace GarageV2
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //TODO: Change to Scoped when using EF.
+            services.AddSingleton<IVehiclesData, VehiclesMockRepository>();
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
