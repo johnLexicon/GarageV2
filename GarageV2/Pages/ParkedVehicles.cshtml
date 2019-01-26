@@ -4,4 +4,27 @@
     ViewData["Title"] = "Parked Vehicles";
 }
 
-<div class="container"><h1>Parked vehicles</h1></div>
+<div class="container">
+    <h1>Parked vehicles</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Reg number</th>
+                <th>Vehicle type</th>
+                <th>Color</th>
+                <th>Parking time</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var parkedVehicle in Model.ParkedVehicles){
+                <tr>
+                    <td>@parkedVehicle.RegNo</td>
+                    <td>@parkedVehicle.Type</td>
+                    <td>@parkedVehicle.Color</td>
+                    <td>@parkedVehicle.CheckIn</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -22,7 +22,8 @@ namespace GarageV2.Services
                     Brand = "Saab",
                     Model = "Jet349",
                     Color = "White",
-                    NoWheels = 2
+                    NoWheels = 2,
+                    CheckIn = DateTime.UtcNow.ToLocalTime()
                 },
                 new ParkedVehicle()
                 {
@@ -32,7 +33,8 @@ namespace GarageV2.Services
                     Brand = "Volvo",
                     Model = "740",
                     Color = "Green",
-                    NoWheels = 4
+                    NoWheels = 4,
+                    CheckIn = DateTime.UtcNow.ToLocalTime()
                 }
             };
         }
@@ -40,6 +42,7 @@ namespace GarageV2.Services
         public ParkedVehicle AddVehicle(ParkedVehicle vehicle)
         {
             vehicle.Id = _parkedVehicles.Max(v => v.Id) + 1;
+            vehicle.CheckIn = DateTime.UtcNow.ToLocalTime();
             _parkedVehicles.Add(vehicle);
 
             return vehicle;

@@ -32,7 +32,7 @@ namespace GarageV2.Pages
             {
                 var addedVehicle = _vehiclesData.AddVehicle(ParkedVehicle);
 
-                //TODO: Add functionality for addedVehicle == null
+                //TODO: Add functionality for case addedVehicle == null
 
                 return new RedirectToPageResult("VehicleDetails", addedVehicle);
             }
