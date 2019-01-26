@@ -9,15 +9,10 @@ namespace GarageV2.Models
 
     public enum VehicleType
     {
-        [Display(Name = "Bil")]
         Car,
-        [Display(Name = "Båt")]
         Boat,
-        [Display(Name = "Motorcykel")]
         Motorbike,
-        [Display(Name = "Flygplan")]
         Airplane,
-        [Display(Name = "Cykel")]
         Bicycle
     }
 

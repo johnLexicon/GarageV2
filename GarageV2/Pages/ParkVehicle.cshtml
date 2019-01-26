@@ -1,6 +1,72 @@
 ﻿@page
 @model ParkVehicleModel
 @{
+    ViewData["Title"] = "Park a Vehicle";
 }
 
-<h1>Park a vehicle</h1>
+<div class="container">
+    <h1>Park a vehicle</h1>
+    <hr />
+    <div class="row">
+        <div class="col-md-8 col-mb-8">
+
+            <form asp-page="ParkVehicle" method="post">
+
+                <div class="control-group form-group">
+                    <div class="controls">
+                        <label asp-for="ParkedVehicle.RegNo">Reg-number:</label>
+                        <input asp-for="ParkedVehicle.RegNo" class="form-control" />
+                        <span asp-validation-for="ParkedVehicle.RegNo"></span>
+                        <p class="help-block"></p>
+                    </div>
+                </div>
+
+                <div class="control-group form-group">
+                    <div class="controls">
+                        <label asp-for="ParkedVehicle.Type">Type:</label>
+                        <select asp-for="ParkedVehicle.Type" asp-items="@Html.GetEnumSelectList<VehicleType>()" class="form-control"></select>
+                        <p class="help-block"></p>
+                    </div>
+                </div>
+
+                <div class="control-group form-group">
+                    <div class="controls">
+                        <label asp-for="ParkedVehicle.Model">Model:</label>
+                        <input asp-for="ParkedVehicle.Model" class="form-control" />
+                        <span asp-validation-for="ParkedVehicle.Model"></span>
+                        <p class="help-block"></p>
+                    </div>
+                </div>
+
+                <div class="control-group form-group">
+                    <div class="controls">
+                        <label asp-for="ParkedVehicle.Brand">Brand:</label>
+                        <input asp-for="ParkedVehicle.Brand" class="form-control">
+                        <span asp-validation-for="ParkedVehicle.Brand"></span>
+                        <p class="help-block"></p>
+                    </div>
+                </div>
+
+                <div class="control-group form-group">
+                    <div class="controls">
+                        <label asp-for="ParkedVehicle.Color">Color:</label>
+                        <input asp-for="ParkedVehicle.Color" class="form-control">
+                        <span asp-validation-for="ParkedVehicle.Color"></span>
+                        <p class="help-block"></p>
+                    </div>
+                </div>
+
+                <div class="control-group form-group">
+                    <div class="controls">
+                        <label asp-for="ParkedVehicle.NoWheels">Number of wheels:</label>
+                        <input asp-for="ParkedVehicle.NoWheels" class="form-control">
+                        <span asp-validation-for="ParkedVehicle.NoWheels"></span>
+                        <p class="help-block"></p>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success" id="parkVehicleBtn">Park vehicle!</button>
+            </form>
+
+        </div>
+    </div>
+</div>
