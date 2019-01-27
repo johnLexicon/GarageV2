@@ -4,16 +4,55 @@
     ViewData["Title"] = "Home";
 }
 
-<div class="container-fluid">
+<div id="container" class="container-fluid">
+
     <div class="row">
-        <div id="home-page-bg" class="fill-screen"></div>
+
+        <div class="col-md-6">
+
+            <div class="white-content-holder">
+                <h4>Prices</h4>
+                <ul>
+                    <li><strong>Ordinary customer: </strong>1000 Crowns per hour</li>
+                    <li><strong>VIP customer: </strong>999 Crowns per hour</li>
+                </ul>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                    consequat.
+                </p>
+            </div>
+            
+
+        </div>
+
+        <div class="col-md-6">
+
+            <div class="white-content-holder">
+                <h4>Who are we?</h4>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                    consequat.
+                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+                    pariatur.
+                    Excepteur sint occaecat cupidatat non proident,
+                    sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </p>
+            </div>
+
+        </div>
     </div>
+
 </div>
 
 <script>
     $(function(){
         $(window).on("load resize", function(){
-            $("#home-page-bg").css("height", window.innerHeight);
+            let bgImageHeight = window.innerHeight - parseInt($("footer").css('height')) + parseInt($("footer").css('padding-top'));
+            $("#home-page-bg").css("height", bgImageHeight);
             $("#home-page-bg").css("width", window.innerWidth);
         });
     });
