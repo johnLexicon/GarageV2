@@ -32,7 +32,7 @@ namespace GarageV2
             services.AddAutoMapper();
 
             //TODO: Change to Scoped when using EF.
-            services.AddSingleton<IVehiclesData, VehiclesMockRepository>();
+            services.AddSingleton<IVehiclesData, VehiclesMockRepository>(s => new VehiclesMockRepository(100));
 
             services.Configure<CookiePolicyOptions>(options =>
             {
