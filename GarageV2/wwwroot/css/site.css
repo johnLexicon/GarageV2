@@ -4,6 +4,15 @@
     padding-bottom: 0px;
 }
 
+#home-page-bg {
+    background-image: url(../images/garage-bg-2.jpg);
+}
+
+.fill-screen {
+    background-size: cover;
+    background-position: center;
+}
+
 .body-content {
     padding-left: 15px;
     padding-right: 15px;

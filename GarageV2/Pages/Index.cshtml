@@ -4,4 +4,17 @@
     ViewData["Title"] = "Home";
 }
 
-<div class="container"><h1>Home Page</h1></div>
+<div class="container-fluid">
+    <div class="row">
+        <div id="home-page-bg" class="fill-screen"></div>
+    </div>
+</div>
+
+<script>
+    $(function(){
+        $(window).on("load resize", function(){
+            $("#home-page-bg").css("height", window.innerHeight);
+            $("#home-page-bg").css("width", window.innerWidth);
+        });
+    });
+</script>

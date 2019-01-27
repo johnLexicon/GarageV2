@@ -16,6 +16,7 @@
                         <th>Vehicle type</th>
                         <th>Color</th>
                         <th>Parking time</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -26,6 +27,11 @@
                         <td>@parkedVehicle.Type</td>
                         <td>@parkedVehicle.Color</td>
                         <td>@parkedVehicle.TimeParked.ToString(@"hh\:mm\:ss")</td>
+                        <td>
+                            @*<a asp-action="Edit" asp-route-id="@parkedVehicle.Id">Edit</a> |
+                            <a asp-page="Details" asp-route-id="@parkedVehicle.Id">Details</a> |*@
+                            <a asp-page="ParkedVehicles" asp-page-handler="delete" asp-route-id="@parkedVehicle.Id">Delete</a>
+                        </td>
                     </tr>
                 }
                 </tbody>

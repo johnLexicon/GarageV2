@@ -8,5 +8,6 @@ namespace GarageV2.Services
     {
         ParkedVehicle AddVehicle(ParkedVehicle vehicle);
         IEnumerable<ParkedVehicle> GetAll();
+        ParkedVehicle RemoveVehicle(int id);
     }
 }

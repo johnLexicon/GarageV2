@@ -57,7 +57,7 @@ namespace GarageV2.Services
 
         public IEnumerable<ParkedVehicle> GetAll()
         {
-            return _parkedVehicles.OrderBy(v => v.Id);
+            return _parkedVehicles.OrderBy(v => v.RegNo);
         }
 
         private List<ParkedVehicle> GenerateVehicles(int noVehicles)
@@ -96,6 +96,18 @@ namespace GarageV2.Services
             stb.Append(rnd.Next(10));
 
             return stb.ToString();
+        }
+
+        public ParkedVehicle RemoveVehicle(int id)
+        {
+            var parkedVehicle = _parkedVehicles.FirstOrDefault(pv => pv.Id == id);
+
+            if(parkedVehicle != null)
+            {
+                _parkedVehicles.Remove(parkedVehicle);
+            }
+
+            return parkedVehicle;
         }
     }
 }
