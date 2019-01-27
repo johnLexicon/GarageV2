@@ -6,14 +6,19 @@
 
 <div class="container">
     <h1>Vehicle Details</h1>
-    <dl>
-        <dt>Brand:</dt>
-        <dd>@Model.VehicleDetails.Brand</dd>
-        <dt>Model:</dt>
-        <dd>@Model.VehicleDetails.Model</dd>
-        <dt>Number of Wheels:</dt>
-        <dd>@Model.VehicleDetails.NoWheels</dd>
-    </dl>
-    <a asp-page="ParkedVehicles">Parked vehicles</a>
+    <hr />
+    <div class="row">
+        <div class="col-md-8 col-mb-8">
+            <dl>
+                <dt>Brand:</dt>
+                <dd>@Model.VehicleDetails.Brand</dd>
+                <dt>Model:</dt>
+                <dd>@Model.VehicleDetails.Model</dd>
+                <dt>Number of Wheels:</dt>
+                <dd>@Model.VehicleDetails.NoWheels</dd>
+            </dl>
+            <a asp-page="ParkedVehicles">Parked vehicles</a>
+        </div>
+    </div>
 </div>
 
