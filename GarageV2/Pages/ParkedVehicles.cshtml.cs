@@ -37,8 +37,7 @@ namespace GarageV2.Pages
         public IActionResult OnGetDelete(int id)
         {
             var removedVehicle = _vehiclesService.RemoveVehicle(id);
-            //return new RedirectTo
-            throw new NotImplementedException();
+            return new RedirectToPageResult("Receipt", removedVehicle);
         }
 
         private readonly IMapper _mapper;

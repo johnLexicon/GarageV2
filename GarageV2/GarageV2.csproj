@@ -19,5 +19,6 @@
     <Folder Include="Services\" />
     <Folder Include="ViewModels\" />
     <Folder Include="wwwroot\images\" />
+    <Folder Include="ViewComponents\" />
   </ItemGroup>
 </Project>

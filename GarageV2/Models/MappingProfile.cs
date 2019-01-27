@@ -14,6 +14,7 @@ namespace GarageV2.Models
         {
             CreateMap<ParkedVehicle, VehicleDetailsViewModel>();
             CreateMap<ParkedVehicle, ParkedVehiclesViewModel>();
+            CreateMap<ParkedVehicle, ReceiptViewModel>();
         }
     }
 }

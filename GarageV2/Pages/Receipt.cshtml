@@ -1,0 +1,29 @@
+﻿@page
+@model ReceiptModel
+@{
+    ViewData["Title"] = "Receipt";
+}
+
+<div class="container">
+    <h1>Receipt</h1>
+    <hr />
+    <div class="row">
+        <div class="col-md-10 col-mb-10">
+            <dl>
+                <dt>Reg number:</dt>
+                <dd>@Model.ReceiptViewModel.RegNo</dd>
+                <dt>Vehicle type:</dt>
+                <dd>@Model.ReceiptViewModel.Type</dd>
+                <dt>Brand:</dt>
+                <dd>@Model.ReceiptViewModel.Brand</dd>
+                <dt>Model:</dt>
+                <dd>@Model.ReceiptViewModel.Model</dd>
+                <dt>Color:</dt>
+                <dd>@Model.ReceiptViewModel.Color</dd>
+                <dt>Number of Wheels:</dt>
+                <dd>@Model.ReceiptViewModel.NoWheels</dd>
+            </dl>
+            <a asp-page="ParkedVehicles">Parked vehicles</a>
+        </div>
+    </div>
+</div>
