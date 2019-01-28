@@ -51,7 +51,7 @@ namespace GarageV2.Controllers
             });
             
 
-            return View(await model.ToListAsync());
+            return View(ParkedCarViewModel);
             }
 
 
@@ -91,6 +91,7 @@ namespace GarageV2.Controllers
         {
             if (ModelState.IsValid)
             {
+                parkedVehicle.CheckIn = DateTime.UtcNow.ToLocalTime();
                 _context.Add(parkedVehicle);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

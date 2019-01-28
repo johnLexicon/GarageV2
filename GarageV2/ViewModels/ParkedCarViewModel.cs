@@ -13,10 +13,11 @@ namespace GarageV2.ViewModels
         [Display(Name = "Reg-nummer")]
         public string RegNo { get; set; }
         [Display(Name = "Fordonstyp")]
-        public VehicleType Type { get; set; }
+        public VehicleType ParkedVehicleType { get; set; }
         [Display(Name = "Färg")]
         public string Color { get; set; }
         [Display(Name ="Parkeringstid")]
         public TimeSpan TimeParked { get; internal set; }
+        public string FormatedTimeParked { get => TimeParked.ToString(@"hh\:mm\:ss"); }
     }
 }
