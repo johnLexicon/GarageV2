@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using GarageV2.Models;
 using GarageV2.ViewModels;
 using AutoMapper;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace GarageV2.Controllers
 {
@@ -35,14 +36,23 @@ namespace GarageV2.Controllers
             var model = from m in _context.ParkedVehicle
                         select m;
 
-
             if (!String.IsNullOrEmpty(searchString))
             {
                 model = _context.ParkedVehicle.Where(pv => pv.RegNo.Contains(searchString));
             }
 
+            var parkedVehicles = model.ToList();
+
+            IEnumerable<ParkedCarViewModel> ParkedCarViewModel = parkedVehicles.Select(p =>
+            {
+                var viewModel = _mapper.Map<ParkedCarViewModel>(p);
+                viewModel.TimeParked = (DateTime.UtcNow.ToLocalTime() - p.CheckIn);
+                return viewModel;
+            });
+            
+
             return View(await model.ToListAsync());
-        }
+            }
 
 
         // GET: ParkedVehicles/Details/5

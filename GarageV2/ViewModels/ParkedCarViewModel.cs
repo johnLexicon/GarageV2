@@ -16,5 +16,7 @@ namespace GarageV2.ViewModels
         public VehicleType Type { get; set; }
         [Display(Name = "Färg")]
         public string Color { get; set; }
+        [Display(Name ="Parkeringstid")]
+        public TimeSpan TimeParked { get; internal set; }
     }
 }
