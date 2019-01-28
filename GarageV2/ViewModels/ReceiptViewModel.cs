@@ -12,6 +12,7 @@ namespace GarageV2.ViewModels
         public string Brand { get; set; }
         public string Model { get; set; }
         public int NoWheels { get; set; }
+        public decimal Price { get; set; }
 
     }
 }
