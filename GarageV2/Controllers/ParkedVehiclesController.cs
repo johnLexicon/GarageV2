@@ -49,10 +49,10 @@ namespace GarageV2.Controllers
                 viewModel.TimeParked = (DateTime.UtcNow.ToLocalTime() - p.CheckIn);
                 return viewModel;
             });
-            
+
 
             return View(ParkedCarViewModel);
-            }
+        }
 
 
         // GET: ParkedVehicles/Details/5
@@ -180,14 +180,26 @@ namespace GarageV2.Controllers
             ReceiptParkingViewModel viewModel = _mapper.Map<ReceiptParkingViewModel>(parkedVehicle);
             viewModel.Checkout = DateTime.UtcNow.ToLocalTime();
             viewModel.TimeParked = viewModel.Checkout - viewModel.CheckIn;
-            viewModel.Price = (decimal) viewModel.TimeParked.TotalMinutes;
+            viewModel.Price = (decimal)viewModel.TimeParked.TotalMinutes;
 
             return View("Receipt", viewModel);
+        }
+
+        public JsonResult CheckIfRegNoExists(string regNo)
+        {
+            var foundVehicle = _context.ParkedVehicle.FirstOrDefault(p => p.RegNo.Equals(regNo));
+            if(foundVehicle is null)
+            {
+                return Json(0);
+            }
+            return Json(1);
         }
 
         private bool ParkedVehicleExists(int id)
         {
             return _context.ParkedVehicle.Any(e => e.Id == id);
         }
+
+
     }
 }
