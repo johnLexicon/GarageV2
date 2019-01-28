@@ -6,16 +6,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GarageV2.Models;
+using GarageV2.ViewModels;
+using AutoMapper;
 
 namespace GarageV2.Controllers
 {
     public class ParkedVehiclesController : Controller
     {
         private readonly GarageV2Context _context;
+        private readonly IMapper _mapper;
 
-        public ParkedVehiclesController(GarageV2Context context)
+        public ParkedVehiclesController(GarageV2Context context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: ParkedVehicles
@@ -30,6 +34,7 @@ namespace GarageV2.Controllers
         {
             var model = from m in _context.ParkedVehicle
                         select m;
+
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -50,12 +55,15 @@ namespace GarageV2.Controllers
 
             var parkedVehicle = await _context.ParkedVehicle
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (parkedVehicle == null)
             {
                 return NotFound();
             }
 
-            return View(parkedVehicle);
+            DetailVehicleViewModel viewModel = _mapper.Map<DetailVehicleViewModel>(parkedVehicle);
+
+            return View(viewModel);
         }
 
         // GET: ParkedVehicles/Create
