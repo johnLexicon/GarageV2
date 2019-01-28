@@ -23,6 +23,15 @@ namespace GarageV2.Pages
         public void OnGet(ParkedVehicle parkedVehicle)
         {
             ReceiptViewModel = _mapper.Map<ReceiptViewModel>(parkedVehicle);
+            var price = CalculatePrice(parkedVehicle.CheckIn);
+            ReceiptViewModel.Price = price;
+        }
+
+        private decimal CalculatePrice(DateTime checkInTime)
+        {
+            var timeParked = DateTime.UtcNow.ToLocalTime() - checkInTime;
+            var minutes = timeParked.Minutes;
+            return minutes;
         }
 
         private readonly IMapper _mapper;
