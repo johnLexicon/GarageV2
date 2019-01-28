@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using GarageV2.Models;
 using AutoMapper;
+using GarageV2.Services;
 
 namespace GarageV2
 {
@@ -29,6 +30,8 @@ namespace GarageV2
         {
             //Adds Dependency Injection functionality for Automapper
             services.AddAutoMapper();
+
+            services.AddSingleton<ParkedVehicleGenerator>();
 
             services.Configure<CookiePolicyOptions>(options =>
             {
