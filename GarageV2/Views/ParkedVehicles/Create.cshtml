@@ -11,8 +11,9 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="RegNo" class="control-label"></label>
-                <input asp-for="RegNo" class="form-control" />
+                <input asp-for="RegNo" class="form-control" onchange="RegNoCheck()" />
                 <span asp-validation-for="RegNo" class="text-danger"></span>
+                <span id="RegNoStatus" class="badge"></span>            
             </div>
             <div class="form-group">
                 <label asp-for="ParkedVehicleType" class="control-label"></label>
@@ -48,6 +49,29 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+<script>
+    function RegNoCheck(){
+        $('#RegNoStatus').removeClass('badge-success').removeClass('badge-danger').addClass('badge-info')
+        $('#RegNoStatus').html('Checking availability...')
+
+        $.post("@Url.Action("CheckIfRegNoExists", "ParkedVehicles")",
+            {
+                regNo: $("#RegNo").val()
+            },
+            function(data){
+                if(data == 1){
+                    $('#RegNoStatus').removeClass('badge-info').addClass('badge-danger')
+                    $('#RegNoStatus').html('Reg-number already exists')
+                }
+                else if(data == 0){
+                    $('#RegNoStatus').removeClass('badge-info').addClass('badge-success')
+                    $('#RegNoStatus').html('Reg-number available')
+                }
+            }
+        )
+    }
+</script>
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
