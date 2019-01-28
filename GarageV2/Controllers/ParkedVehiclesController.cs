@@ -9,6 +9,7 @@ using GarageV2.Models;
 using GarageV2.ViewModels;
 using AutoMapper;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using GarageV2.Services;
 
 namespace GarageV2.Controllers
 {
@@ -16,11 +17,13 @@ namespace GarageV2.Controllers
     {
         private readonly GarageV2Context _context;
         private readonly IMapper _mapper;
+        private readonly ParkedVehicleGenerator _vehicleGenerator;
 
-        public ParkedVehiclesController(GarageV2Context context, IMapper mapper)
+        public ParkedVehiclesController(GarageV2Context context, IMapper mapper, ParkedVehicleGenerator vehicleGenerator)
         {
             _context = context;
             _mapper = mapper;
+            _vehicleGenerator = vehicleGenerator;
         }
 
         // GET: ParkedVehicles
@@ -195,11 +198,27 @@ namespace GarageV2.Controllers
             return Json(1);
         }
 
+        [Route("/generate/{noParkedVehicles}")]
+        public IActionResult GenerateParkedVehicles(int noParkedVehicles)
+        {
+            //var generator = new ParkedVehicleGenerator();
+
+            for (int i = 0; i < noParkedVehicles; i++)
+            {
+                var generatedVehicle = _vehicleGenerator.GenerateVehicle();
+                if(_context.ParkedVehicle.FirstOrDefault(p => p.RegNo.Equals(generatedVehicle.RegNo)) is null)
+                {
+                    _context.Add(generatedVehicle);
+                    _context.SaveChanges();
+                }
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
         private bool ParkedVehicleExists(int id)
         {
             return _context.ParkedVehicle.Any(e => e.Id == id);
         }
-
-
     }
 }
