@@ -14,6 +14,10 @@ namespace GarageV2.ViewModels
         public string RegNo { get; set; }
         [Display(Name = "Fordonstyp")]
         public VehicleType ParkedVehicleType { get; set; }
+        [Display(Name = "Märke")]
+        public string Brand { get; set; }
+        [Display(Name = "Modell")]
+        public string Model { get; set; }
         [Display(Name = "Färg")]
         public string Color { get; set; }
         [Display(Name ="Parkeringstid")]
