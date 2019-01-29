@@ -2,7 +2,12 @@
     ViewData["Title"] = "Home Page";
 }
 
-        <div class="text-center">
-            <h1 class="display-4"></h1>
-            <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-        </div>
+<script>
+    $(function(){
+        $(window).on("load resize", function(){
+            let bgImageHeight = window.innerHeight - parseInt($("footer").css('height')) + parseInt($("footer").css('padding-top'));
+            $("#home-page-bg").css("height", bgImageHeight);
+            $("#home-page-bg").css("width", window.innerWidth);
+        });
+    });
+</script>

@@ -22,6 +22,7 @@ namespace GarageV2.ViewModels
         public DateTime CheckIn { get; set; }
         [Display(Name = "Slut tid")]
         public DateTime Checkout { get; set; }
+        [DataType(DataType.Currency)]
         [Display(Name = "Pris")]
         public decimal Price { get; set; }
     }
