@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h4>Garaget - Lista</h4>
+<h4>Parkering</h4>
 <hr />
 @*
     <p>
@@ -39,7 +39,7 @@
                 @Html.DisplayNameFor(model => model.TimeParked)
             </th>
             <th>
-                <a asp-action="AddOrEdit" class="btn btn-outline-success"><i class="far fa-plus-square"></i> Checkin</a>
+                <a asp-action="AddOrEdit" class="btn btn-outline-success"><i class="far fa-plus-square"></i> <i class="fas fa-car fa-lg"></i></a>
             </th>
             <th></th>
         </tr>
@@ -68,6 +68,7 @@
             </td>
             <td>
                 <a asp-action="AddOrEdit" asp-route-id="@item.Id"><i class="fa fa-marker fa-lg"></i></a>
+                <a asp-action="Details" asp-route-id="@item.Id"><i class="fas fa-info-circle fa-lg"></i></a>
                 <a asp-action="DeleteConfirmed" asp-route-id="@item.Id" class="text-danger ml-1"><i class="fa fa-trash-alt fa-lg"></i></a>
             </td>
             @*

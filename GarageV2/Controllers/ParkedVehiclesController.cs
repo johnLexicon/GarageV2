@@ -59,7 +59,6 @@ namespace GarageV2.Controllers
 
 
         // GET: ParkedVehicles/Details/5
-        /*
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -79,7 +78,7 @@ namespace GarageV2.Controllers
 
             return View(viewModel);
         }
-        */
+
         // GET: ParkedVehicles/Create
         /*
         public IActionResult Create()
@@ -94,6 +93,8 @@ namespace GarageV2.Controllers
             else
                 return View(_context.ParkedVehicle.Find(id));
         }
+
+
         // POST: ParkedVehicles/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -112,9 +113,11 @@ namespace GarageV2.Controllers
             return View(parkedVehicle);
         }
         */
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddOrEdit([Bind("Id,RegNo,ParkedVehicleType,Color,Brand,Model,NoWheels")] ParkedVehicle parkedVehicle)
+        public async Task<IActionResult> AddOrEdit([Bind("Id,RegNo,ParkedVehicleType,Color,Brand,Model,NoWheels,CheckIn")] ParkedVehicle parkedVehicle)
         {
             if (ModelState.IsValid)
             {                
