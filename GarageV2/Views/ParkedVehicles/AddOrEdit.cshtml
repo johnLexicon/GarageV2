@@ -2,9 +2,7 @@
 @{
     ViewData["Title"] = "Create";
 }
-<h1>Parkera</h1>
-<h4>Vill du parkera detta Fordon?</h4>
-<h3>Ange ditt registreringsnummer i formatet AAA111 för validering.</h3>
+<h4>Parkera ditt Fordon</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -14,7 +12,7 @@
                 <label asp-for="RegNo" class="control-label"></label>
                 <input asp-for="RegNo" class="form-control" onchange="RegNoCheck()" />
                 <span asp-validation-for="RegNo" class="text-danger"></span>
-                <span id="RegNoStatus" class="badge"></span>            
+                <span id="RegNoStatus" class="badge"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ParkedVehicleType" class="control-label"></label>
@@ -41,15 +39,50 @@
                 <input asp-for="NoWheels" class="form-control" />
                 <span asp-validation-for="NoWheels" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Parkera" class="btn btn-primary" />
+            @*
+        <div class="form-group">
+            <input type="submit" value="Create" class="btn btn-primary" />
+        </div>
+            *@
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-database"></i> Spara
+                    </button>
+                </div>
+                <div class="form-group col-md-6">
+                    <a asp-action="Index" class="btn btn-secondary btn-block"><i class="fa fa-table"></i> Back to List</a>
+                </div>
             </div>
         </form>
     </div>
 </div>
-<div>
-    <a asp-action="Index">Tillbaka till Parkerade Fordon</a>
-</div>
+@*<div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+*@
+<script>
+    function RegNoCheck(){
+        $('#RegNoStatus').removeClass('badge-success').removeClass('badge-danger').addClass('badge-info')
+        $('#RegNoStatus').html('Checking availability...')
+
+        $.post("@Url.Action("CheckIfRegNoExists", "ParkedVehicles")",
+            {
+                regNo: $("#RegNo").val()
+            },
+            function(data){
+                if(data == 1){
+                    $('#RegNoStatus').removeClass('badge-info').addClass('badge-danger')
+                    $('#RegNoStatus').html('Reg-number already exists')
+                }
+                else if(data == 0){
+                    $('#RegNoStatus').removeClass('badge-info').addClass('badge-success')
+                    $('#RegNoStatus').html('Reg-number available')
+                }
+            }
+        )
+    }
+</script>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
