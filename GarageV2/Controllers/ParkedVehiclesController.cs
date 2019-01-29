@@ -59,7 +59,6 @@ namespace GarageV2.Controllers
 
 
         // GET: ParkedVehicles/Details/5
-        /*
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -79,7 +78,7 @@ namespace GarageV2.Controllers
 
             return View(viewModel);
         }
-        */
+
         // GET: ParkedVehicles/Create
         /*
         public IActionResult Create()
