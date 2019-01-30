@@ -59,3 +59,11 @@ body {
     position: absolute;
     z-index: -1;
 }
+
+#err404-container {
+    background-image: url(../img/error404.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    height: 1000px;
+}

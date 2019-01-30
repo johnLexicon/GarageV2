@@ -46,8 +46,7 @@ namespace GarageV2
         {
             if (env.IsDevelopment())
             {
-                //app.UseDeveloperExceptionPage();
-                app.UseExceptionHandler("/Home/Error");
+                app.UseDeveloperExceptionPage();
             }
             else
             {
@@ -59,7 +58,7 @@ namespace GarageV2
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            app.UseStatusCodePagesWithRedirects("Home/Error404");
+            //app.UseStatusCodePagesWithRedirects("/Home/Error404");
 
             app.UseMvc(routes =>
             {
