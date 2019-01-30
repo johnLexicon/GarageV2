@@ -2,6 +2,8 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
+
+/*
 function RegNoCheck() {
     $('#RegNoStatus').removeClass('badge-success').removeClass('badge-danger').addClass('badge-info')
     $('#RegNoStatus').html('Checking availability...')
@@ -22,3 +24,4 @@ function RegNoCheck() {
         }
     )
 }
+*/

@@ -14,5 +14,6 @@ namespace GarageV2.Models
         }
 
         public DbSet<GarageV2.Models.ParkedVehicle> ParkedVehicle { get; set; }
+
     }
 }
