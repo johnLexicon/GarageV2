@@ -120,11 +120,11 @@ namespace GarageV2.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddOrEdit([Bind("Id,RegNo,ParkedVehicleType,Color,Brand,Model,NoWheels,CheckIn")] AddOrEditViewModel viewModel)
+        public async Task<IActionResult> AddOrEdit([Bind("Id,RegNo,ParkedVehicleType,Color,Brand,Model,NoWheels,CheckIn,AlreadyParked")] AddOrEditViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                if (viewModel.Id == 0)
+                if (!viewModel.AlreadyParked)
                 {
                     viewModel.CheckIn = DateTime.UtcNow.ToLocalTime();
                     var parkedVehicle = _mapper.Map<ParkedVehicle>(viewModel);
@@ -210,15 +210,21 @@ namespace GarageV2.Controllers
 
             return View("Receipt", viewModel);
         }
-        
-        public JsonResult CheckIfRegNoExists(string regNo)
+
+        public IActionResult CheckIfRegNoExists(string regNo, bool alreadyParked)
         {
-            var foundVehicle = _context.ParkedVehicle.FirstOrDefault(p => p.RegNo.Equals(regNo));
-            if(foundVehicle is null)
+            if (alreadyParked)
             {
-                return Json(0);
+                return Json(true);
             }
-            return Json(1);
+
+            var foundVehicle = _context.ParkedVehicle.FirstOrDefault(p => p.RegNo.Equals(regNo.ToUpper()));
+
+            if(foundVehicle != null)
+            {
+                return Json($"Reg-nummer {regNo} finns redan.");
+            }
+            return Json(true);
         }
 
         [Route("/generate/{noParkedVehicles}")]
