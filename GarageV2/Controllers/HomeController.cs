@@ -12,6 +12,7 @@ namespace GarageV2.Controllers
     {
         public IActionResult Index()
         {
+            int.Parse("fsdkjsfd");
             return View();
         }
 
@@ -24,6 +25,11 @@ namespace GarageV2.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public IActionResult Error404()
+        {
+            return Ok("This is the 404 error page!!!!");
         }
     }
 }
