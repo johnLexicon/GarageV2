@@ -26,13 +26,6 @@ namespace GarageV2.Controllers
             _vehicleGenerator = vehicleGenerator;
         }
 
-        // GET: ParkedVehicles
-        /*
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.ParkedVehicle.ToListAsync());
-        }
-        */
         // Get: Search Products
         public IActionResult Index(string searchString)
         {
@@ -79,13 +72,7 @@ namespace GarageV2.Controllers
             return View(viewModel);
         }
 
-        // GET: ParkedVehicles/Create
-        /*
-        public IActionResult Create()
-        {
-            return View();
-        }
-        */
+
         public IActionResult AddOrEdit(int id = 0)
         {
             if (id == 0)
@@ -194,31 +181,6 @@ namespace GarageV2.Controllers
         }
         */
 
-        // GET: ParkedVehicles/Delete/5
-        /*
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var parkedVehicle = await _context.ParkedVehicle
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (parkedVehicle == null)
-            {
-                return NotFound();
-            }
-
-            return View(parkedVehicle);
-        }
-        */
-
-        // POST: ParkedVehicles/Delete/5
-
-        //[HttpPost, ActionName("Delete")]
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var parkedVehicle = await _context.ParkedVehicle.FindAsync(id);
@@ -258,17 +220,6 @@ namespace GarageV2.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        /*
-        public async Task<IActionResult> Delete(int? id)
-        {
-            var vehicle = await _context.ParkedVehicle.FindAsync(id);
-            _context.ParkedVehicle.Remove(vehicle);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-            return RedirectToAction(nameof(Receipt));
-            
-        }
-        */
         /*
         private bool ParkedVehicleExists(int id)
         {
