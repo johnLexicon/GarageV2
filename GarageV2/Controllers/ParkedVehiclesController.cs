@@ -34,7 +34,7 @@ namespace GarageV2.Controllers
         }
         */
         // Get: Search Products
-        public async Task<IActionResult> Index(string searchString)
+        public IActionResult Index(string searchString)
         {
             var model = from m in _context.ParkedVehicle
                         select m;
@@ -120,17 +120,22 @@ namespace GarageV2.Controllers
         public async Task<IActionResult> AddOrEdit([Bind("Id,RegNo,ParkedVehicleType,Color,Brand,Model,NoWheels,CheckIn")] ParkedVehicle parkedVehicle)
         {
             if (ModelState.IsValid)
-            {                
+            {
                 if (parkedVehicle.Id == 0)
                 {
                     parkedVehicle.CheckIn = DateTime.UtcNow.ToLocalTime();
                     _context.Add(parkedVehicle);
                 }                    
                 else
+                {
                     _context.Update(parkedVehicle);
+                }
+                    
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(parkedVehicle);
         }
 
@@ -239,7 +244,6 @@ namespace GarageV2.Controllers
         [Route("/generate/{noParkedVehicles}")]
         public IActionResult GenerateParkedVehicles(int noParkedVehicles)
         {
-            //var generator = new ParkedVehicleGenerator();
 
             for (int i = 0; i < noParkedVehicles; i++)
             {
