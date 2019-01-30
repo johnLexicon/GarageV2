@@ -62,35 +62,11 @@
                         <a asp-action="Index" class="btn btn-secondary btn-block"><i class="fas fa-warehouse"></i> Till Parkeringen</a>
                     </div>
                 </div>
+                <input asp-for="CheckIn" type="hidden" />
         </form>
     </div>
 </div>
-@*<div>
-        <a asp-action="Index">Back to List</a>
-    </div>
-*@
-<script>
-    function RegNoCheck(){
-        $('#RegNoStatus').removeClass('badge-success').removeClass('badge-danger').addClass('badge-info')
-        $('#RegNoStatus').html('Checking availability...')
 
-        $.post("@Url.Action("CheckIfRegNoExists", "ParkedVehicles")",
-            {
-                regNo: $("#RegNo").val()
-            },
-            function(data){
-                if(data == 1){
-                    $('#RegNoStatus').removeClass('badge-info').addClass('badge-danger')
-                    $('#RegNoStatus').html('Reg-number already exists')
-                }
-                else if(data == 0){
-                    $('#RegNoStatus').removeClass('badge-info').addClass('badge-success')
-                    $('#RegNoStatus').html('Reg-number available')
-                }
-            }
-        )
-    }
-</script>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
