@@ -51,7 +51,7 @@ namespace GarageV2.Controllers
                 var viewModel = _mapper.Map<ParkedCarViewModel>(p);
                 viewModel.TimeParked = (DateTime.UtcNow.ToLocalTime() - p.CheckIn);
                 return viewModel;
-            });
+            }).OrderByDescending(vm => vm.TimeParked);
 
 
             return View(ParkedCarViewModel);            
