@@ -222,8 +222,6 @@ namespace GarageV2.Controllers
 
             ReceiptParkingViewModel viewModel = _mapper.Map<ReceiptParkingViewModel>(parkedVehicle);
             viewModel.Checkout = DateTime.UtcNow.ToLocalTime();
-            viewModel.TimeParked = viewModel.Checkout - viewModel.CheckIn;
-            viewModel.Price = (decimal)viewModel.TimeParked.TotalMinutes;
 
             return View("Receipt", viewModel);
         }
