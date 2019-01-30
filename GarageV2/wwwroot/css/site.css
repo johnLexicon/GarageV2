@@ -191,17 +191,18 @@ body {
     height: 400px;
 }
 #built-with-icons{
-    align-items:center;
+    align-content:center;
     align-self:center;
+    padding-left:54px;
 }
 #bs{
     width:auto;
-    border-width:2px;
+    border-width:8px;
     border-color:transparent;
-    margin-left:6px;
     color:white;
     text-align:center;
     text-decoration:dotted;
-
-
+}
+#pix-1-mp #pix-2-mp #pix-3-mp{
+    align-items:center;
 }
