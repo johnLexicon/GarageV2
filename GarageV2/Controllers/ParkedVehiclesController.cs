@@ -26,15 +26,8 @@ namespace GarageV2.Controllers
             _vehicleGenerator = vehicleGenerator;
         }
 
-        // GET: ParkedVehicles
-        /*
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.ParkedVehicle.ToListAsync());
-        }
-        */
         // Get: Search Products
-        public async Task<IActionResult> Index(string searchString)
+        public IActionResult Index(string searchString)
         {
             var model = from m in _context.ParkedVehicle
                         select m;
@@ -51,7 +44,7 @@ namespace GarageV2.Controllers
                 var viewModel = _mapper.Map<ParkedCarViewModel>(p);
                 viewModel.TimeParked = (DateTime.UtcNow.ToLocalTime() - p.CheckIn);
                 return viewModel;
-            });
+            }).OrderByDescending(vm => vm.TimeParked);
 
 
             return View(ParkedCarViewModel);            
@@ -79,13 +72,7 @@ namespace GarageV2.Controllers
             return View(viewModel);
         }
 
-        // GET: ParkedVehicles/Create
-        /*
-        public IActionResult Create()
-        {
-            return View();
-        }
-        */
+
         public IActionResult AddOrEdit(int id = 0)
         {
             if (id == 0)
@@ -120,17 +107,22 @@ namespace GarageV2.Controllers
         public async Task<IActionResult> AddOrEdit([Bind("Id,RegNo,ParkedVehicleType,Color,Brand,Model,NoWheels,CheckIn")] ParkedVehicle parkedVehicle)
         {
             if (ModelState.IsValid)
-            {                
+            {
                 if (parkedVehicle.Id == 0)
                 {
                     parkedVehicle.CheckIn = DateTime.UtcNow.ToLocalTime();
                     _context.Add(parkedVehicle);
                 }                    
                 else
+                {
                     _context.Update(parkedVehicle);
+                }
+                    
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(parkedVehicle);
         }
 
@@ -189,31 +181,6 @@ namespace GarageV2.Controllers
         }
         */
 
-        // GET: ParkedVehicles/Delete/5
-        /*
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var parkedVehicle = await _context.ParkedVehicle
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (parkedVehicle == null)
-            {
-                return NotFound();
-            }
-
-            return View(parkedVehicle);
-        }
-        */
-
-        // POST: ParkedVehicles/Delete/5
-
-        //[HttpPost, ActionName("Delete")]
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var parkedVehicle = await _context.ParkedVehicle.FindAsync(id);
@@ -239,7 +206,6 @@ namespace GarageV2.Controllers
         [Route("/generate/{noParkedVehicles}")]
         public IActionResult GenerateParkedVehicles(int noParkedVehicles)
         {
-            //var generator = new ParkedVehicleGenerator();
 
             for (int i = 0; i < noParkedVehicles; i++)
             {
@@ -254,17 +220,6 @@ namespace GarageV2.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        /*
-        public async Task<IActionResult> Delete(int? id)
-        {
-            var vehicle = await _context.ParkedVehicle.FindAsync(id);
-            _context.ParkedVehicle.Remove(vehicle);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-            return RedirectToAction(nameof(Receipt));
-            
-        }
-        */
         /*
         private bool ParkedVehicleExists(int id)
         {

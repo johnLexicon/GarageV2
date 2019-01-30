@@ -58,13 +58,13 @@ namespace GarageV2
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            //app.UseStatusCodePagesWithRedirects("/Home/Error404");
+            app.UseStatusCodePagesWithRedirects("/Home/Error404");
 
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=ParkedVehicles}/{action=Index}/{searchString?}");
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
