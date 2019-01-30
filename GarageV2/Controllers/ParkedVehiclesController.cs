@@ -76,9 +76,25 @@ namespace GarageV2.Controllers
         public IActionResult AddOrEdit(int id = 0)
         {
             if (id == 0)
-                return View(new ParkedVehicle());
+            {
+                var viewModel = new AddOrEditViewModel()
+                {
+                    AlreadyParked = false
+                };
+                return View(viewModel);
+            }
+
             else
-                return View(_context.ParkedVehicle.Find(id));
+            {
+                var parkedVehicle = _context.ParkedVehicle.Find(id);
+                var viewModel = _mapper.Map<AddOrEditViewModel>(parkedVehicle);
+                viewModel.AlreadyParked = true;
+
+                return View(viewModel);
+            }
+                
+
+                
         }
 
 
@@ -104,17 +120,19 @@ namespace GarageV2.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddOrEdit([Bind("Id,RegNo,ParkedVehicleType,Color,Brand,Model,NoWheels,CheckIn")] ParkedVehicle parkedVehicle)
+        public async Task<IActionResult> AddOrEdit([Bind("Id,RegNo,ParkedVehicleType,Color,Brand,Model,NoWheels,CheckIn")] AddOrEditViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                if (parkedVehicle.Id == 0)
+                if (viewModel.Id == 0)
                 {
-                    parkedVehicle.CheckIn = DateTime.UtcNow.ToLocalTime();
+                    viewModel.CheckIn = DateTime.UtcNow.ToLocalTime();
+                    var parkedVehicle = _mapper.Map<ParkedVehicle>(viewModel);
                     _context.Add(parkedVehicle);
                 }                    
                 else
                 {
+                    var parkedVehicle = _mapper.Map<ParkedVehicle>(viewModel);
                     _context.Update(parkedVehicle);
                 }
                     
@@ -123,7 +141,7 @@ namespace GarageV2.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(parkedVehicle);
+            return View(viewModel);
         }
 
         // GET: ParkedVehicles/Edit/5
