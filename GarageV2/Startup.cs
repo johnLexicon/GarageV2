@@ -33,18 +33,12 @@ namespace GarageV2
 
             services.AddSingleton<ParkedVehicleGenerator>();
 
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
-
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddDbContext<GarageV2Context>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("GarageV2Context")));
+                options.UseSqlServer(Configuration.GetConnectionString("GarageV2Context"))
+                //options.UseSqlServer(Configuration.GetConnectionString("GarageV2Mac"))
+            );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,13 +57,14 @@ namespace GarageV2
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseCookiePolicy();
+
+            app.UseStatusCodePagesWithRedirects("/Home/Error404");
 
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=ParkedVehicles}/{action=Index}/{searchString?}");
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

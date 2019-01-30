@@ -4,10 +4,10 @@
     ViewData["Title"] = "Receipt";
 }
 
-<h1>Receipt</h1>
+<h1>Parkeringskvitto</h1>
 
 <div>
-    <h4>ParkedVehicle</h4>
+    <h4>Information om det parkerade fordonet</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -41,13 +41,19 @@
             @Html.DisplayFor(model => model.Checkout)
         </dd>
         <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TimeParked)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FormattedTimeParked)
+        </dd>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Price)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Price)
+            @Html.DisplayFor(model => model.FormattedPrice)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Tillbaka till Parkerade Fordon</a>
 </div>

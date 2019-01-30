@@ -34,7 +34,7 @@ namespace GarageV2.Controllers
         }
         */
         // Get: Search Products
-        public async Task<IActionResult> Index(string searchString)
+        public IActionResult Index(string searchString)
         {
             var model = from m in _context.ParkedVehicle
                         select m;
@@ -59,7 +59,6 @@ namespace GarageV2.Controllers
 
 
         // GET: ParkedVehicles/Details/5
-        /*
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -79,7 +78,7 @@ namespace GarageV2.Controllers
 
             return View(viewModel);
         }
-        */
+
         // GET: ParkedVehicles/Create
         /*
         public IActionResult Create()
@@ -94,6 +93,8 @@ namespace GarageV2.Controllers
             else
                 return View(_context.ParkedVehicle.Find(id));
         }
+
+
         // POST: ParkedVehicles/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -112,22 +113,29 @@ namespace GarageV2.Controllers
             return View(parkedVehicle);
         }
         */
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddOrEdit([Bind("Id,RegNo,ParkedVehicleType,Color,Brand,Model,NoWheels")] ParkedVehicle parkedVehicle)
+        public async Task<IActionResult> AddOrEdit([Bind("Id,RegNo,ParkedVehicleType,Color,Brand,Model,NoWheels,CheckIn")] ParkedVehicle parkedVehicle)
         {
             if (ModelState.IsValid)
-            {                
+            {
                 if (parkedVehicle.Id == 0)
                 {
                     parkedVehicle.CheckIn = DateTime.UtcNow.ToLocalTime();
                     _context.Add(parkedVehicle);
                 }                    
                 else
+                {
                     _context.Update(parkedVehicle);
+                }
+                    
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(parkedVehicle);
         }
 
@@ -219,8 +227,6 @@ namespace GarageV2.Controllers
 
             ReceiptParkingViewModel viewModel = _mapper.Map<ReceiptParkingViewModel>(parkedVehicle);
             viewModel.Checkout = DateTime.UtcNow.ToLocalTime();
-            viewModel.TimeParked = viewModel.Checkout - viewModel.CheckIn;
-            viewModel.Price = (decimal)viewModel.TimeParked.TotalMinutes;
 
             return View("Receipt", viewModel);
         }
@@ -238,7 +244,6 @@ namespace GarageV2.Controllers
         [Route("/generate/{noParkedVehicles}")]
         public IActionResult GenerateParkedVehicles(int noParkedVehicles)
         {
-            //var generator = new ParkedVehicleGenerator();
 
             for (int i = 0; i < noParkedVehicles; i++)
             {
