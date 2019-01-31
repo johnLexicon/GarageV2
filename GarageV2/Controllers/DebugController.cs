@@ -8,6 +8,10 @@ namespace GarageV2.Controllers
     {
         private readonly IHostingEnvironment _hostingEnvironment;
 
+        /// <summary>
+        /// Controller for checking Environment and paths info
+        /// </summary>
+        /// <param name="hostingEnvironment"></param>
         public DebugController(IHostingEnvironment hostingEnvironment)
         {
             _hostingEnvironment = hostingEnvironment;
