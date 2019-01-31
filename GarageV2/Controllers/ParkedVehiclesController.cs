@@ -69,6 +69,12 @@ namespace GarageV2.Controllers
 
 
         // GET: ParkedVehicles/Details/5
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id">The id of the parked vehicle</param>
+        /// <returns>The Details view</returns>
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -89,7 +95,11 @@ namespace GarageV2.Controllers
             return View(viewModel);
         }
 
-
+        /// <summary>
+        /// Checks if it is an add or edit command. Redirects to overridden action method.
+        /// </summary>
+        /// <param name="id">The id of the vehicle</param>
+        /// <returns></returns>
         public IActionResult AddOrEdit(int id = 0)
         {
             if (id == 0)
@@ -134,7 +144,11 @@ namespace GarageV2.Controllers
         }
         */
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="viewModel">The Viewmodel for the AddOrEdit view</param>
+        /// <returns>The AddOrEdit view</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddOrEdit([Bind("Id,RegNo,ParkedVehicleType,Color,Brand,Model,NoWheels,CheckIn,AlreadyParked")] AddOrEditViewModel viewModel)
@@ -161,61 +175,11 @@ namespace GarageV2.Controllers
             return View(viewModel);
         }
 
-        // GET: ParkedVehicles/Edit/5
-        /*
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var parkedVehicle = await _context.ParkedVehicle.FindAsync(id);
-            if (parkedVehicle == null)
-            {
-                return NotFound();
-            }
-            return View(parkedVehicle);
-        }
-        */
-
-        // POST: ParkedVehicles/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        /*
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,RegNo,ParkedVehicleType,Color,Brand,Model,NoWheels,CheckIn")]ParkedVehicle parkedVehicle)
-        {
-            if (id != parkedVehicle.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(parkedVehicle);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ParkedVehicleExists(parkedVehicle.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(parkedVehicle);
-        }
-        */
-
+        /// <summary>
+        /// Action that calculates the the total and shows the receipt information 
+        /// </summary>
+        /// <param name="id">The id of the checked out vehicle</param>
+        /// <returns>The Receipt view</returns>
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var parkedVehicle = await _context.ParkedVehicle.FindAsync(id);
@@ -229,6 +193,12 @@ namespace GarageV2.Controllers
             return View("Receipt", viewModel);
         }
 
+        /// <summary>
+        /// Action used for Remote validation for the uniqueness Reg number in the AddOrEdit view.
+        /// </summary>
+        /// <param name="regNo">The reg number to check</param>
+        /// <param name="id">The id of the parked vehicle (id = 0 if the vehicle is parking)</param>
+        /// <returns></returns>
         public IActionResult CheckIfRegNoExists(string regNo, int id)
         {
 
@@ -241,6 +211,11 @@ namespace GarageV2.Controllers
             return Json(true);
         }
 
+        /// <summary>
+        /// Helper Action method for generating instances of parked vehicles.
+        /// </summary>
+        /// <param name="noParkedVehicles">The number of parked vehicles to generate.</param>
+        /// <returns>The view with the list of the parked vehicles.</returns>
         [Route("/generate/{noParkedVehicles}")]
         public IActionResult GenerateParkedVehicles(int noParkedVehicles)
         {
@@ -258,11 +233,5 @@ namespace GarageV2.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        /*
-        private bool ParkedVehicleExists(int id)
-        {
-            return _context.ParkedVehicle.Any(e => e.Id == id);
-        }
-        */
     }
 }
