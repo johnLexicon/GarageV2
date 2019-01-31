@@ -194,7 +194,7 @@ namespace GarageV2.Controllers
         }
 
         /// <summary>
-        /// Action used for Remote validation for the uniqueness Reg number in the AddOrEdit view.
+        /// Helper Action used for Remote validation for the uniqueness of Reg number in the view class ViewModels/AddOrEditViewModel.cs
         /// </summary>
         /// <param name="regNo">The reg number to check</param>
         /// <param name="id">The id of the parked vehicle (id = 0 if the vehicle is parking)</param>
@@ -212,7 +212,8 @@ namespace GarageV2.Controllers
         }
 
         /// <summary>
-        /// Helper Action method for generating instances of parked vehicles.
+        /// Helper Action method for generating data (seed database) of parked vehicles. 
+        /// Ex Use from URL localhost/Generate/20  => Generate 20 records in database
         /// </summary>
         /// <param name="noParkedVehicles">The number of parked vehicles to generate.</param>
         /// <returns>The view with the list of the parked vehicles.</returns>
