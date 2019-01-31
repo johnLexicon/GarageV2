@@ -18,12 +18,14 @@ namespace GarageV2.Controllers
         private readonly GarageV2Context _context;
         private readonly IMapper _mapper;
         private readonly ParkedVehicleGenerator _vehicleGenerator;
+        private readonly GarageSettings _garageSettings;
 
-        public ParkedVehiclesController(GarageV2Context context, IMapper mapper, ParkedVehicleGenerator vehicleGenerator)
+        public ParkedVehiclesController(GarageV2Context context, IMapper mapper, ParkedVehicleGenerator vehicleGenerator, GarageSettings garageSettings)
         {
             _context = context;
             _mapper = mapper;
             _vehicleGenerator = vehicleGenerator;
+            _garageSettings = garageSettings;
         }
 
         // Get: Search Products
@@ -207,6 +209,7 @@ namespace GarageV2.Controllers
 
             ReceiptParkingViewModel viewModel = _mapper.Map<ReceiptParkingViewModel>(parkedVehicle);
             viewModel.Checkout = DateTime.UtcNow.ToLocalTime();
+            viewModel.Price = _garageSettings.PricePerMinute;
 
             return View("Receipt", viewModel);
         }

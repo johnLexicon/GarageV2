@@ -32,6 +32,7 @@ namespace GarageV2
             services.AddAutoMapper();
 
             services.AddSingleton<ParkedVehicleGenerator>();
+            services.AddSingleton<GarageSettings>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
