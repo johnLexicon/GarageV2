@@ -31,7 +31,10 @@ namespace GarageV2
             //Adds Dependency Injection functionality for Automapper
             services.AddAutoMapper();
 
+            //Service for generating vehicles
             services.AddSingleton<ParkedVehicleGenerator>();
+
+            //Class for accessing the garage settings e.g garage price per minute.
             services.AddSingleton<GarageSettings>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -59,6 +62,7 @@ namespace GarageV2
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            //For using custom Error404 page.
             app.UseStatusCodePagesWithRedirects("/Home/Error404");
 
             app.UseMvc(routes =>
