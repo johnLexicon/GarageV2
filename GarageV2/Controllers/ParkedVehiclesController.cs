@@ -20,6 +20,13 @@ namespace GarageV2.Controllers
         private readonly ParkedVehicleGenerator _vehicleGenerator;
         private readonly GarageSettings _garageSettings;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context">The dbContext for parked vehicles</param>
+        /// <param name="mapper">For automapping</param>
+        /// <param name="vehicleGenerator">Helper for generating vehicles</param>
+        /// <param name="garageSettings">For accessing garage settings from Config file</param>
         public ParkedVehiclesController(GarageV2Context context, IMapper mapper, ParkedVehicleGenerator vehicleGenerator, GarageSettings garageSettings)
         {
             _context = context;
@@ -29,13 +36,21 @@ namespace GarageV2.Controllers
         }
 
         // Get: Search Products
+
+        /// <summary>
+        /// List of vehicles in the parking lot
+        /// </summary>
+        /// <param name="searchString">a string for filtering the vehicles by the reg number.</param>
+        /// <returns>The Index View</returns>
         public IActionResult Index(string searchString)
         {
+            //Query for retrieving all vehicles.
             var model = from m in _context.ParkedVehicle
                         select m;
 
             if (!String.IsNullOrEmpty(searchString))
             {
+                //Query for retrieving vehicles that contain the searchstring in the reg number.
                 model = _context.ParkedVehicle.Where(pv => pv.RegNo.Contains(searchString));
             }
 
