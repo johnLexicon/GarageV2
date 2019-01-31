@@ -13,6 +13,10 @@ namespace GarageV2.Services
             _rnd = new Random();
         }
 
+        /// <summary>
+        /// Generates a parked vehicle randomizing the Vehicle type, Reg number and number or wheels.
+        /// </summary>
+        /// <returns></returns>
         public ParkedVehicle GenerateVehicle()
         {
             DateTime dateTime = DateTime.UtcNow.ToLocalTime();
@@ -30,6 +34,10 @@ namespace GarageV2.Services
             };
         }
 
+        /// <summary>
+        /// Method for generating the reg number
+        /// </summary>
+        /// <returns></returns>
         private string GenerateRegNo()
         {
             StringBuilder stb = new StringBuilder();
