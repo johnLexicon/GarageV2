@@ -195,13 +195,20 @@ body {
     align-self:center;
     padding-left:54px;
 }
-#bs{
-    width:auto;
-    border-width:8px;
-    border-color:transparent;
+
+.jumbotron-fluid {
+    padding-right: 0;
+    padding-left: 0;
+    border-radius: 0;
+    background-color: transparent;
+    height: 2rem;
     color:white;
-    text-align:center;
-    text-decoration:dotted;
-
-
 }
+.jumbotron {
+    color: white;
+    background-color: transparent;
+    height: 2rem;
+}
+
+
+
