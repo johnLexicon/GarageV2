@@ -124,26 +124,6 @@ namespace GarageV2.Controllers
                 
         }
 
-
-        // POST: ParkedVehicles/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        /*
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,RegNo,ParkedVehicleType,Color,Brand,Model,NoWheels")] ParkedVehicle parkedVehicle)
-        {
-            if (ModelState.IsValid)
-            {
-                parkedVehicle.CheckIn = DateTime.UtcNow.ToLocalTime();
-                _context.Add(parkedVehicle);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(parkedVehicle);
-        }
-        */
-
         /// <summary>
         /// 
         /// </summary>
@@ -183,6 +163,13 @@ namespace GarageV2.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var parkedVehicle = await _context.ParkedVehicle.FindAsync(id);
+
+            //Redirects to not found (Error404 page) if parked vehicle is null.
+            if(parkedVehicle is null)
+            {
+                return NotFound();
+            }
+
             _context.ParkedVehicle.Remove(parkedVehicle);
             await _context.SaveChangesAsync();
 
