@@ -214,16 +214,12 @@ namespace GarageV2.Controllers
             return View("Receipt", viewModel);
         }
 
-        public IActionResult CheckIfRegNoExists(string regNo, bool alreadyParked)
+        public IActionResult CheckIfRegNoExists(string regNo, int id)
         {
-            if (alreadyParked)
-            {
-                return Json(true);
-            }
 
             var foundVehicle = _context.ParkedVehicle.FirstOrDefault(p => p.RegNo.Equals(regNo.ToUpper()));
 
-            if(foundVehicle != null)
+            if(foundVehicle != null && foundVehicle.Id != id)
             {
                 return Json($"Reg-nummer {regNo} finns redan.");
             }
