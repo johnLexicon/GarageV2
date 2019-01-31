@@ -32,11 +32,11 @@ namespace GarageV2.ViewModels
         [Display(Name = "Slut tid")]
         public DateTime Checkout { get; set; }
 
-        [Display(Name = "Pris")]
-        public decimal Price { get => (decimal)TimeParked.TotalMinutes * _pricePerMinute; }
+        [Display(Name = "Total")]
+        public decimal Price { get => (decimal)TimeParked.TotalMinutes * _pricePerMinute; set => _pricePerMinute = value; }
 
         public string FormattedPrice { get => Price.ToString("C", new CultureInfo("sv-SE"));  }
 
-        private readonly decimal _pricePerMinute = 10;
+        private decimal _pricePerMinute;
     }
 }
