@@ -21,6 +21,9 @@ namespace GarageV2.Models
         Bicycle
     }
 
+    /// <summary>
+    /// Model used for the parked vehicles.
+    /// </summary>
     public class ParkedVehicle
     {
 
