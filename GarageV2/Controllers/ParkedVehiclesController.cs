@@ -42,7 +42,7 @@ namespace GarageV2.Controllers
         /// </summary>
         /// <param name="searchString">a string for filtering the vehicles by the reg number.</param>
         /// <returns>The Index View</returns>
-        public IActionResult Index(string searchString)
+        public async Task<IActionResult> Index(string searchString)
         {
             //Query for retrieving all vehicles.
             var model = from m in _context.ParkedVehicle
@@ -54,7 +54,7 @@ namespace GarageV2.Controllers
                 model = _context.ParkedVehicle.Where(pv => pv.RegNo.Contains(searchString));
             }
 
-            var parkedVehicles = model.ToList();
+            var parkedVehicles = await model.ToListAsync();
 
             IEnumerable<ParkedCarViewModel> ParkedCarViewModel = parkedVehicles.Select(p =>
             {
