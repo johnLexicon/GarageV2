@@ -102,19 +102,22 @@ namespace GarageV2.Controllers
         /// <returns></returns>
         public IActionResult AddOrEdit(int id = 0)
         {
+            //Create
             if (id == 0)
             {
                 var viewModel = new AddOrEditViewModel()
                 {
-                    AlreadyParked = false
-                };
+                    AlreadyParked = false,
+                    ParkedVehicleTypes = _context.VehicleType.ToList()
+            };
                 return View(viewModel);
             }
-
+            //Edit
             else
             {
                 var parkedVehicle = _context.ParkedVehicle.Find(id);
                 var viewModel = _mapper.Map<AddOrEditViewModel>(parkedVehicle);
+                viewModel.ParkedVehicleTypes = _context.VehicleType.ToList();
                 viewModel.AlreadyParked = true;
 
                 return View(viewModel);

@@ -1,5 +1,6 @@
 ﻿using GarageV2.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -21,7 +22,7 @@ namespace GarageV2.ViewModels
         public string RegNo { get { return _regNo; } set { _regNo = value.ToUpper(); } }
 
         [Display(Name = "Fordonstyp")]
-        public VehicleType ParkedVehicleType { get; set; }
+        public IEnumerable<VehicleType> ParkedVehicleTypes { get; set; }
 
         [Display(Name = "Färg")]
         [StringLength(8, MinimumLength = 3, ErrorMessage = "Färg ska vara en sträng mellan 3 till 8 tecken")]
@@ -41,6 +42,16 @@ namespace GarageV2.ViewModels
         public DateTime CheckIn { get; set; }
 
         public bool AlreadyParked { get; set; }
+
+        public List<SelectListItem> GetParkeVehicleTypes()
+        {
+            List<SelectListItem> items = new List<SelectListItem>();
+            foreach(var item in ParkedVehicleTypes)
+            {
+                items.Add(new SelectListItem { Value = item.Id.ToString(), Text = item.Name });
+            }
+            return items;
+        }
 
     }
 }

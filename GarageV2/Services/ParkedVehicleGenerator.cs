@@ -25,7 +25,7 @@ namespace GarageV2.Services
             return new ParkedVehicle
             {
                 RegNo = GenerateRegNo(),
-                ParkedVehicleType = (VehicleType)_rnd.Next(5),
+                //ParkedVehicleType = (VehicleType)_rnd.Next(5),
                 Brand = "TheBrand",
                 Model = "TheModel",
                 Color = "TheColor",

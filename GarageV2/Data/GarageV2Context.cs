@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace GarageV2.Models
 {
@@ -14,6 +10,8 @@ namespace GarageV2.Models
         }
 
         public DbSet<GarageV2.Models.ParkedVehicle> ParkedVehicle { get; set; }
+        public DbSet<VehicleType> VehicleType { get; set; }
+        public DbSet<Member> Member { get; set; }
 
     }
 }
