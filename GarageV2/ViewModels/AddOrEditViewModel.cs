@@ -21,8 +21,13 @@ namespace GarageV2.ViewModels
         [Display(Name = "Reg-nummer")]
         public string RegNo { get { return _regNo; } set { _regNo = value.ToUpper(); } }
 
-        [Display(Name = "Fordonstyp")]
         public IEnumerable<VehicleType> ParkedVehicleTypes { get; set; }
+
+        public int VehicleTypeId { get; set; }
+
+        [Display(Name = "Fordonstyp")]
+        public IEnumerable<SelectListItem> FormattedParkedVehicleTypes
+        { get => ParkedVehicleTypes.Select(t => new SelectListItem { Value = t.Id.ToString(), Text = t.Name }); }
 
         [Display(Name = "Färg")]
         [StringLength(8, MinimumLength = 3, ErrorMessage = "Färg ska vara en sträng mellan 3 till 8 tecken")]
@@ -43,15 +48,8 @@ namespace GarageV2.ViewModels
 
         public bool AlreadyParked { get; set; }
 
-        public List<SelectListItem> GetParkeVehicleTypes()
-        {
-            List<SelectListItem> items = new List<SelectListItem>();
-            foreach(var item in ParkedVehicleTypes)
-            {
-                items.Add(new SelectListItem { Value = item.Id.ToString(), Text = item.Name });
-            }
-            return items;
-        }
+
+
 
     }
 }
