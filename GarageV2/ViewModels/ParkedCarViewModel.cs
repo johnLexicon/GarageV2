@@ -11,6 +11,9 @@ namespace GarageV2.ViewModels
     {
         public int Id { get; set; }
 
+        [Display(Name ="Ägare")]
+        public Member Owner { get; set; }
+
         [Display(Name = "Reg-nummer")]
         public string RegNo { get; set; }
 
