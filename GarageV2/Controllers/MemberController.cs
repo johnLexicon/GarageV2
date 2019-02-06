@@ -6,6 +6,7 @@ using AutoMapper;
 using GarageV2.Models;
 using GarageV2.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace GarageV2.Controllers
 {
@@ -20,7 +21,7 @@ namespace GarageV2.Controllers
             _context = context;
             _mapper = mapper;
         }
-
+        
         public IActionResult Index()
         {
             return View();
