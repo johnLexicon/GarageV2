@@ -27,7 +27,7 @@ namespace GarageV2.ViewModels
 
         [Display(Name = "Fordonstyp")]
         public IEnumerable<SelectListItem> FormattedParkedVehicleTypes
-        { get => ParkedVehicleTypes.Select(t => new SelectListItem { Value = t.Id.ToString(), Text = t.Name }); }
+        { get => ParkedVehicleTypes.Select(t => new SelectListItem { Value = t.Id.ToString(), Text = t.Name.ToString() }); }
 
         [Display(Name = "Färg")]
         [StringLength(8, MinimumLength = 3, ErrorMessage = "Färg ska vara en sträng mellan 3 till 8 tecken")]

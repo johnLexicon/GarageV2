@@ -134,7 +134,10 @@ namespace GarageV2.Controllers
         /// <returns>The AddOrEdit view</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddOrEdit([Bind("Id,RegNo,ParkedVehicleType,Color,Brand,Model,NoWheels,CheckIn,AlreadyParked")] AddOrEditViewModel viewModel)
+
+        //public async Task<IActionResult> AddOrEdit([Bind("Id,RegNo,ParkedVehicleTypes,Color,Brand,Model,NoWheels,CheckIn,AlreadyParked")] AddOrEditViewModel viewModel)
+        //public async Task<IActionResult> AddOrEdit([Bind("Id,RegNo,ParkedVehicleTypes, VehicleTypeIdColor,Brand,Model,NoWheels,CheckIn")] AddOrEditViewModel viewModel)
+        public async Task<IActionResult> AddOrEdit(AddOrEditViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
