@@ -48,9 +48,6 @@ namespace GarageV2.Controllers
             var model = from m in _context.ParkedVehicle
                         select m;
 
-            
-            //context.Entry(student).Reference(s => s.StudentAddress).Load();
-
             if (!String.IsNullOrEmpty(searchString))
             {
                 //Query for retrieving vehicles that contain the searchstring in the reg number.
@@ -107,13 +104,17 @@ namespace GarageV2.Controllers
         /// <returns></returns>
         public IActionResult AddOrEdit(int id = 0)
         {
+            var parkedVehicleTypes = _context.VehicleType.ToList();
+            var members = _context.Member.ToList();
+
             //Create
             if (id == 0)
             {
                 var viewModel = new AddOrEditViewModel()
                 {
                     AlreadyParked = false,
-                    ParkedVehicleTypes = _context.VehicleType.ToList()
+                    ParkedVehicleTypes = parkedVehicleTypes,
+                    Members = members
                 };
                 return View(viewModel);
             }
@@ -122,13 +123,11 @@ namespace GarageV2.Controllers
             {
                 var parkedVehicle = _context.ParkedVehicle.Find(id);
                 var viewModel = _mapper.Map<AddOrEditViewModel>(parkedVehicle);
-                viewModel.ParkedVehicleTypes = _context.VehicleType.ToList();
+                viewModel.ParkedVehicleTypes = parkedVehicleTypes;
                 viewModel.AlreadyParked = true;
-
+                viewModel.Members = members;
                 return View(viewModel);
             }
-                
-
                 
         }
 
@@ -139,23 +138,28 @@ namespace GarageV2.Controllers
         /// <returns>The AddOrEdit view</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-
-        //public async Task<IActionResult> AddOrEdit([Bind("Id,RegNo,ParkedVehicleTypes,Color,Brand,Model,NoWheels,CheckIn,AlreadyParked")] AddOrEditViewModel viewModel)
-        //public async Task<IActionResult> AddOrEdit([Bind("Id,RegNo,ParkedVehicleTypes, VehicleTypeIdColor,Brand,Model,NoWheels,CheckIn")] AddOrEditViewModel viewModel)
         public async Task<IActionResult> AddOrEdit(AddOrEditViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
+                var member = _context.Member.Find(viewModel.MemberId);
+                var vehicleType = _context.VehicleType.Find(viewModel.VehicleTypeId);
+
                 if (!viewModel.AlreadyParked)
                 {
                     viewModel.CheckIn = DateTime.UtcNow.ToLocalTime();
                     var parkedVehicle = _mapper.Map<ParkedVehicle>(viewModel);
+                    parkedVehicle.Member = member;
+                    parkedVehicle.VehicleType = vehicleType;
                     _context.Add(parkedVehicle);
                 }                    
                 else
                 {
                     var parkedVehicle = _mapper.Map<ParkedVehicle>(viewModel);
+                    parkedVehicle.VehicleType = vehicleType;
+                    parkedVehicle.Member = member;
                     _context.Update(parkedVehicle);
+
                 }
                     
                 await _context.SaveChangesAsync();
