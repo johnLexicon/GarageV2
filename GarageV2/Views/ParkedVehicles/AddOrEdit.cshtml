@@ -20,7 +20,7 @@
                 <div class="form-group col-md-6">
                     <label asp-for="FormattedParkedVehicleTypes" class="control-label"></label>
                     <select asp-for="VehicleTypeId" asp-items="@Model.FormattedParkedVehicleTypes" class="form-control">
-                        <option disabled selected>Inget Fordon</option>
+                        <option disabled selected>Välj fordonstyp</option>
                     </select>
                     <span asp-validation-for="ParkedVehicleTypes" class="text-danger"></span>
                 </div>
