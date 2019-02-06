@@ -1,4 +1,5 @@
 ﻿using GarageV2.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,9 +12,11 @@ namespace GarageV2.ViewModels
     {
         public int Id { get; set; }
 
-        [Display(Name ="Ägare")]
-        public Member Owner { get; set; }
-
+        
+        
+        [Display(Name = "Ägare")]
+        public Member Member { get; set; }
+        
         [Display(Name = "Reg-nummer")]
         public string RegNo { get; set; }
 
