@@ -185,8 +185,13 @@ namespace GarageV2.Controllers
                 return NotFound();
             }
 
+            _context.Entry(parkedVehicle).Reference(pv => pv.Member).Load();
+            _context.Entry(parkedVehicle).Reference(pv => pv.VehicleType).Load();
+
             _context.ParkedVehicle.Remove(parkedVehicle);
+
             await _context.SaveChangesAsync();
+            //_context.Entry(p).Reference(v => v.Member).Load();
 
             ReceiptParkingViewModel viewModel = _mapper.Map<ReceiptParkingViewModel>(parkedVehicle);
             viewModel.Checkout = DateTime.UtcNow.ToLocalTime();
