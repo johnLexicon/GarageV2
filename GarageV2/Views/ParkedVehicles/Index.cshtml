@@ -25,6 +25,9 @@
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.Owner)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.RegNo)
             </th>
             <th>
@@ -51,38 +54,41 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.RegNo)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ParkedVehicleType)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Brand)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Model)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Color)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FormatedTimeParked)
-                </td>
-                <td>
-                    <a asp-action="AddOrEdit" asp-route-id="@item.Id"><i class="fas fa-edit"></i> Ändra</a>
-                    <a asp-action="Details" asp-route-id="@item.Id"><i class="fas fa-info-circle fa-lg"></i> Info</a>
-                    <a asp-action="DeleteConfirmed" asp-route-id="@item.Id" class="text-danger ml-1"><i class="fas fa-car"></i> Utcheckning</a>
-                </td>
-                @*
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                    </td>
-                *@
-            </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Owner)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RegNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ParkedVehicleType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Brand)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Model)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Color)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FormatedTimeParked)
+            </td>
+            <td>
+                <a asp-action="AddOrEdit" asp-route-id="@item.Id"><i class="fas fa-edit"></i> Ändra</a>
+                <a asp-action="Details" asp-route-id="@item.Id"><i class="fas fa-info-circle fa-lg"></i> Info</a>
+                <a asp-action="DeleteConfirmed" asp-route-id="@item.Id" class="text-danger ml-1"><i class="fas fa-car"></i> Utcheckning</a>
+            </td>
+            @*
+        <td>
+            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+        </td>
+            *@
+        </tr>
         }
     </tbody>
 </table>
