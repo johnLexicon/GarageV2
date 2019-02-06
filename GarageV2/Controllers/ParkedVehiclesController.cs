@@ -48,9 +48,6 @@ namespace GarageV2.Controllers
             var model = from m in _context.ParkedVehicle
                         select m;
 
-            
-            //context.Entry(student).Reference(s => s.StudentAddress).Load();
-
             if (!String.IsNullOrEmpty(searchString))
             {
                 //Query for retrieving vehicles that contain the searchstring in the reg number.
@@ -141,9 +138,6 @@ namespace GarageV2.Controllers
         /// <returns>The AddOrEdit view</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-
-        //public async Task<IActionResult> AddOrEdit([Bind("Id,RegNo,ParkedVehicleTypes,Color,Brand,Model,NoWheels,CheckIn,AlreadyParked")] AddOrEditViewModel viewModel)
-        //public async Task<IActionResult> AddOrEdit([Bind("Id,RegNo,ParkedVehicleTypes, VehicleTypeIdColor,Brand,Model,NoWheels,CheckIn")] AddOrEditViewModel viewModel)
         public async Task<IActionResult> AddOrEdit(AddOrEditViewModel viewModel)
         {
             if (ModelState.IsValid)
