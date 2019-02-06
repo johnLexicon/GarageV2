@@ -109,7 +109,7 @@ namespace GarageV2.Controllers
                 {
                     AlreadyParked = false,
                     ParkedVehicleTypes = _context.VehicleType.ToList()
-            };
+                };
                 return View(viewModel);
             }
             //Edit

@@ -20,6 +20,8 @@ namespace GarageV2.Models
             CreateMap<ParkedVehicle, ReceiptParkingViewModel>();
             CreateMap<ParkedVehicle, AddOrEditViewModel>();
             CreateMap<AddOrEditViewModel, ParkedVehicle>();
+            CreateMap<Member, MemberAddOrEditViewModel>();
+            CreateMap<MemberAddOrEditViewModel, Member>();
         }
     }
 }
