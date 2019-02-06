@@ -48,6 +48,9 @@ namespace GarageV2.Controllers
             var model = from m in _context.ParkedVehicle
                         select m;
 
+            
+            //context.Entry(student).Reference(s => s.StudentAddress).Load();
+
             if (!String.IsNullOrEmpty(searchString))
             {
                 //Query for retrieving vehicles that contain the searchstring in the reg number.
@@ -58,6 +61,8 @@ namespace GarageV2.Controllers
 
             IEnumerable<ParkedCarViewModel> ParkedCarViewModel = parkedVehicles.Select(p =>
             {
+                _context.Entry(p).Reference(v => v.Member).Load();
+                _context.Entry(p).Reference(v => v.VehicleType).Load();
                 var viewModel = _mapper.Map<ParkedCarViewModel>(p);
                 viewModel.TimeParked = (DateTime.UtcNow.ToLocalTime() - p.CheckIn);
                 return viewModel;

@@ -12,13 +12,13 @@ namespace GarageV2.ViewModels
         public int Id { get; set; }
 
         [Display(Name ="Ägare")]
-        public Member Owner { get; set; }
+        public Member Member { get; set; }
 
         [Display(Name = "Reg-nummer")]
         public string RegNo { get; set; }
 
         [Display(Name = "Fordonstyp")]
-        public VehicleType ParkedVehicleType { get; set; }
+        public VehicleType VehicleType { get; set; }
 
         [Display(Name = "Märke")]
         public string Brand { get; set; }

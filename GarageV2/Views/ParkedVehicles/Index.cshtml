@@ -25,13 +25,13 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Owner)
+                @Html.DisplayNameFor(model => model.Member)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.RegNo)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ParkedVehicleType)
+                @Html.DisplayNameFor(model => model.VehicleType)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Brand)
@@ -56,13 +56,13 @@
         {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Owner)
+                @Html.DisplayFor(modelItem => item.Member.Email)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.RegNo)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ParkedVehicleType)
+                @Html.DisplayFor(modelItem => item.VehicleType.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Brand)
