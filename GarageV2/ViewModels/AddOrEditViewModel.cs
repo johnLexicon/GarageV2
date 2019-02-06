@@ -15,19 +15,23 @@ namespace GarageV2.ViewModels
 
         public int Id { get; set; }
 
+       
+
         [Required]
         [Remote(action: "CheckIfRegNoExists", controller: "ParkedVehicles", AdditionalFields = nameof(Id))]
         [RegularExpression(@"^[a-zA-Z]{3}\d{3}$", ErrorMessage = "Fel format för reg-nummer")]
         [Display(Name = "Reg-nummer")]
         public string RegNo { get { return _regNo; } set { _regNo = value.ToUpper(); } }
 
+       
+
         public IEnumerable<VehicleType> ParkedVehicleTypes { get; set; }
 
         public int VehicleTypeId { get; set; }
-
+        
         [Display(Name = "Fordonstyp")]
         public IEnumerable<SelectListItem> FormattedParkedVehicleTypes
-        { get => ParkedVehicleTypes.Select(t => new SelectListItem { Value = t.Id.ToString(), Text = t.Name }); }
+        { get => ParkedVehicleTypes.Select(t => new SelectListItem { Value = t.Id.ToString(), Text = t.Name.ToString() }); }
 
         [Display(Name = "Färg")]
         [StringLength(8, MinimumLength = 3, ErrorMessage = "Färg ska vara en sträng mellan 3 till 8 tecken")]
