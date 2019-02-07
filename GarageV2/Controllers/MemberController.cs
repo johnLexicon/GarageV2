@@ -57,6 +57,27 @@ namespace GarageV2.Controllers
             });
             return View(memberListViewModels);
         }
+
+        public IActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var member = _context.Member.FirstOrDefault(m => m.Id == id);
+
+            if (member is null)
+            {
+                return NotFound();
+            }
+
+            _context.Entry(member).Collection(m => m.ParkedVehicles).Load();
+            DetailsMemberViewModel viewModel = _mapper.Map<DetailsMemberViewModel>(member);
+
+            return View(viewModel);
+
+        }
         
         public IActionResult AddOrEdit(int id = 0)
         {
