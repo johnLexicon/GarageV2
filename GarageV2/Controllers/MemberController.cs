@@ -25,16 +25,37 @@ namespace GarageV2.Controllers
             _parkedVehicleGenerator = parkedVehicleGenerator;
         }
         
-        public IActionResult Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            var members = _context.Member.ToList();
+            // Query for retrieving all members
+            var model = from m in _context.Member                        
+                        select m;
+
+            // - Filter -
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                // Query for retrieving members that contain the searchstring
+                model = _context.Member                
+                .Where(
+                    pv => pv.Email.ToLower().Contains(searchString.ToLower()) ||                    
+                    pv.FirstName.ToLower().Contains(searchString.ToLower()) ||
+                    pv.LastName.ToLower().Contains(searchString.ToLower()) ||
+                    pv.PhoneNumber.ToLower().Contains(searchString.ToLower())                    
+                );
+
+            }
+
+            // --- Create MemberListViewModel ---
+            
+            var members = await model.ToListAsync();
+
             IEnumerable<MemberListViewModel> memberListViewModels = members.Select(m =>
             {
                 return _mapper.Map<MemberListViewModel>(m);
             });
             return View(memberListViewModels);
         }
-
+        
         public IActionResult AddOrEdit(int id = 0)
         {
             MemberAddOrEditViewModel viewModel = null;
