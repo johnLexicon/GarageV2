@@ -34,6 +34,32 @@ namespace GarageV2.Services
             };
         }
 
+        public Member GenerateMember()
+        {
+            return new Member
+            {
+                Email = GenerateEmail(),
+                FirstName = "First name",
+                LastName = "Last name",
+                PhoneNumber = _rnd.Next(1000000000).ToString()
+            };
+        }
+
+        private string GenerateEmail()
+        {
+            StringBuilder stb = new StringBuilder();
+
+            stb.Append((char)_rnd.Next(97, 122));
+            stb.Append((char)_rnd.Next(97, 122));
+            stb.Append((char)_rnd.Next(97, 122));
+            stb.Append((char)_rnd.Next(97, 122));
+            stb.Append((char)_rnd.Next(97, 122));
+            stb.Append((char)_rnd.Next(97, 122));
+            stb.Append("@gmail.com");
+
+            return stb.ToString();
+        }
+
         /// <summary>
         /// Method for generating the reg number
         /// </summary>
