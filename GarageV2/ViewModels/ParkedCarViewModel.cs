@@ -1,4 +1,5 @@
 ﻿using GarageV2.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -19,7 +20,7 @@ namespace GarageV2.ViewModels
 
         [Display(Name = "Fordonstyp")]
         public VehicleType VehicleType { get; set; }
-
+        
         [Display(Name = "Märke")]
         public string Brand { get; set; }
 
