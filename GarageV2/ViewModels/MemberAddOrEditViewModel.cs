@@ -27,7 +27,7 @@ namespace GarageV2.ViewModels
 
         [Phone(ErrorMessage = "Fel format för tel-nummer")]
         [MaxLength(20)]
-        [Display(Name = "Telnr")]
+        [Display(Name = "Telefonnummer")]
         public string PhoneNumber { get; set; }
 
     }
