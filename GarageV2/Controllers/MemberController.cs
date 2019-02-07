@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using GarageV2.Models;
+using GarageV2.Services;
 using GarageV2.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,11 +16,13 @@ namespace GarageV2.Controllers
 
         private readonly GarageV2Context _context;
         private readonly IMapper _mapper;
+        private readonly ParkedVehicleGenerator _parkedVehicleGenerator;
 
-        public MemberController(GarageV2Context context, IMapper mapper)
+        public MemberController(GarageV2Context context, IMapper mapper, ParkedVehicleGenerator parkedVehicleGenerator)
         {
             _context = context;
             _mapper = mapper;
+            _parkedVehicleGenerator = parkedVehicleGenerator;
         }
         
         public IActionResult Index()
@@ -84,7 +87,7 @@ namespace GarageV2.Controllers
         /// <returns></returns>
         public IActionResult CheckIfEmailAlreadyExists(string email, int id)
         {
-            if(email is null)
+            if(email is null) 
             {
                 return NotFound();
             }
@@ -95,6 +98,26 @@ namespace GarageV2.Controllers
                 return Json($"E-post adressen {email} är redan registrerad");
             }
             return Json(true);
+        }
+
+        [Route("Member/Generate/{noMembers}")]
+        public IActionResult GenerateMembers(int noMembers = 5)
+        {
+            var existingEmails = _context.Member.Select(m => m.Email).ToList();
+            for(int i = 0; i < noMembers; i++)
+            {
+                var member = _parkedVehicleGenerator.GenerateMember();
+                //If email does noe exist
+                if(existingEmails.IndexOf(member.Email) == -1)
+                {
+                    existingEmails.Add(member.Email);
+                    _context.Add(member);
+                }
+            }
+
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Index));
         }
 
     }
