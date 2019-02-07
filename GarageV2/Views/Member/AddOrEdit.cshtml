@@ -42,8 +42,12 @@
                     <button type="submit" class="btn btn-primary">Spara</button>
                 </div>
             </div>
+            <input asp-for="Id" type="hidden" />
         </form>
 
     </div>
 </div>
 
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -208,6 +208,10 @@ namespace GarageV2.Controllers
         /// <returns></returns>
         public IActionResult CheckIfRegNoExists(string regNo, int id)
         {
+            if(regNo is null)
+            {
+                return NotFound();
+            }
 
             var foundVehicle = _context.ParkedVehicle.FirstOrDefault(p => p.RegNo.Equals(regNo.ToUpper()));
 
