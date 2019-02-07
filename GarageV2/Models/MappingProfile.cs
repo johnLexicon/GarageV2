@@ -22,6 +22,7 @@ namespace GarageV2.Models
             CreateMap<AddOrEditViewModel, ParkedVehicle>();
             CreateMap<Member, MemberAddOrEditViewModel>();
             CreateMap<MemberAddOrEditViewModel, Member>();
+            CreateMap<MemberListViewModel, Member>();
         }
     }
 }

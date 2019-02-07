@@ -66,7 +66,7 @@ namespace GarageV2.Controllers
             }).OrderByDescending(vm => vm.TimeParked);
 
 
-            return View(ParkedCarViewModel);            
+            return View(ParkedCarViewModel);                  
         }
 
 

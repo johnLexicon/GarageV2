@@ -24,7 +24,12 @@ namespace GarageV2.Controllers
         
         public IActionResult Index()
         {
-            return View();
+            var members = _context.Member.ToList();
+            IEnumerable<MemberListViewModel> memberListViewModels = members.Select(m =>
+            {
+                return _mapper.Map<MemberListViewModel>(m);
+            });
+            return View(memberListViewModels);
         }
 
         public IActionResult AddOrEdit(int id = 0)
