@@ -16,7 +16,7 @@ namespace GarageV2.ViewModels
         public string RegNo { get; set; }
 
         [Display(Name = "Fordonstyp")]
-        public VehicleType ParkedVehicleType { get; set; }
+        public VehicleType VehicleType { get; set; }
 
         [Display(Name = "Färg")]
         public string Color { get; set; }
@@ -34,6 +34,11 @@ namespace GarageV2.ViewModels
 
         [Display(Name = "Total")]
         public decimal Price { get => (decimal)TimeParked.TotalMinutes * _pricePerMinute; set => _pricePerMinute = value; }
+
+        [Display(Name = "Medlem")]
+        public Member Member { get; set; }
+
+        public String MemberFullname { get => $"{Member.FirstName} {Member.LastName}"; }
 
         public string FormattedPrice { get => Price.ToString("C", new CultureInfo("sv-SE"));  }
 
