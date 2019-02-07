@@ -87,7 +87,7 @@ namespace GarageV2.Controllers
             }).OrderByDescending(vm => vm.TimeParked);
 
 
-            return View(ParkedCarViewModel);
+            return View(ParkedCarViewModel);            
         }
 
 
@@ -125,13 +125,17 @@ namespace GarageV2.Controllers
         /// <returns></returns>
         public IActionResult AddOrEdit(int id = 0)
         {
-            // - Create -
+            var parkedVehicleTypes = _context.VehicleType.ToList();
+            var members = _context.Member.ToList();
+
+            //Create
             if (id == 0)
             {
                 var viewModel = new AddOrEditViewModel()
                 {
                     AlreadyParked = false,
-                    ParkedVehicleTypes = _context.VehicleType.ToList()
+                    ParkedVehicleTypes = parkedVehicleTypes,
+                    Members = members
                 };
                 return View(viewModel);
             }
@@ -140,14 +144,14 @@ namespace GarageV2.Controllers
             {
                 var parkedVehicle = _context.ParkedVehicle.Find(id);
                 var viewModel = _mapper.Map<AddOrEditViewModel>(parkedVehicle);
-                viewModel.ParkedVehicleTypes = _context.VehicleType.ToList();
+                viewModel.ParkedVehicleTypes = parkedVehicleTypes;
                 viewModel.AlreadyParked = true;
-
+                viewModel.Members = members;
                 return View(viewModel);
             }
+                
 
-
-
+                
         }
 
         /// <summary>
@@ -157,23 +161,28 @@ namespace GarageV2.Controllers
         /// <returns>The AddOrEdit view</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-
-        //public async Task<IActionResult> AddOrEdit([Bind("Id,RegNo,ParkedVehicleTypes,Color,Brand,Model,NoWheels,CheckIn,AlreadyParked")] AddOrEditViewModel viewModel)
-        //public async Task<IActionResult> AddOrEdit([Bind("Id,RegNo,ParkedVehicleTypes, VehicleTypeIdColor,Brand,Model,NoWheels,CheckIn")] AddOrEditViewModel viewModel)
         public async Task<IActionResult> AddOrEdit(AddOrEditViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
+                var member = _context.Member.Find(viewModel.MemberId);
+                var vehicleType = _context.VehicleType.Find(viewModel.VehicleTypeId);
+
                 if (!viewModel.AlreadyParked)
                 {
                     viewModel.CheckIn = DateTime.UtcNow.ToLocalTime();
                     var parkedVehicle = _mapper.Map<ParkedVehicle>(viewModel);
+                    parkedVehicle.Member = member;
+                    parkedVehicle.VehicleType = vehicleType;
                     _context.Add(parkedVehicle);
                 }
                 else
                 {
                     var parkedVehicle = _mapper.Map<ParkedVehicle>(viewModel);
+                    parkedVehicle.VehicleType = vehicleType;
+                    parkedVehicle.Member = member;
                     _context.Update(parkedVehicle);
+
                 }
 
                 await _context.SaveChangesAsync();
@@ -199,8 +208,13 @@ namespace GarageV2.Controllers
                 return NotFound();
             }
 
+            _context.Entry(parkedVehicle).Reference(pv => pv.Member).Load();
+            _context.Entry(parkedVehicle).Reference(pv => pv.VehicleType).Load();
+
             _context.ParkedVehicle.Remove(parkedVehicle);
+
             await _context.SaveChangesAsync();
+            //_context.Entry(p).Reference(v => v.Member).Load();
 
             ReceiptParkingViewModel viewModel = _mapper.Map<ReceiptParkingViewModel>(parkedVehicle);
             viewModel.Checkout = DateTime.UtcNow.ToLocalTime();
@@ -217,6 +231,10 @@ namespace GarageV2.Controllers
         /// <returns></returns>
         public IActionResult CheckIfRegNoExists(string regNo, int id)
         {
+            if(regNo is null)
+            {
+                return NotFound();
+            }
 
             var foundVehicle = _context.ParkedVehicle.FirstOrDefault(p => p.RegNo.Equals(regNo.ToUpper()));
 

@@ -6,6 +6,7 @@ using AutoMapper;
 using GarageV2.Models;
 using GarageV2.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace GarageV2.Controllers
 {
@@ -20,7 +21,7 @@ namespace GarageV2.Controllers
             _context = context;
             _mapper = mapper;
         }
-
+        
         public IActionResult Index()
         {
             return View();
@@ -34,13 +35,12 @@ namespace GarageV2.Controllers
             if(id == 0)
             {
                 viewModel = new MemberAddOrEditViewModel();
-
             }
             //Edit
             else
             {
                 var member = _context.Member.Find(id);
-                viewModel = new MemberAddOrEditViewModel();
+                viewModel = _mapper.Map<MemberAddOrEditViewModel>(member);
             }
 
             return View(viewModel);
@@ -70,5 +70,27 @@ namespace GarageV2.Controllers
 
             return View(viewModel);
         }
+
+        /// <summary>
+        /// Helper Action used for Remote validation for the Email uniqueness in the view class ViewModels/MemberAddOrEditViewModel.cs
+        /// </summary>
+        /// <param name="email">The email to check</param>
+        /// <param name="id">The member id</param>
+        /// <returns></returns>
+        public IActionResult CheckIfEmailAlreadyExists(string email, int id)
+        {
+            if(email is null)
+            {
+                return NotFound();
+            }
+
+            var foundMember = _context.Member.FirstOrDefault(p => p.Email.ToLower().Equals(email.ToLower()));
+            if (foundMember != null && foundMember.Id != id)
+            {
+                return Json($"E-post adressen {email} är redan registrerad");
+            }
+            return Json(true);
+        }
+
     }
 }
