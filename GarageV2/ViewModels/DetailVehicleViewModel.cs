@@ -12,7 +12,7 @@ namespace GarageV2.ViewModels
         [Display(Name = "Reg-nummer")]
         public string RegNo { get; set; }
         [Display(Name = "Fordonstyp")]
-        public VehicleType ParkedVehicleType { get; set; }
+        public VehicleType VehicleType { get; set; }
         [Display(Name = "Färg")]
         public string Color { get; set; }
         [Display(Name = "Märke")]

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GarageV2.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -21,7 +22,10 @@ namespace GarageV2.ViewModels
         public string LastName { get; set; }
 
         [Phone]
-        [Display(Name = "Telnr")]
+        [Display(Name = "Telefonnummer")]
         public string PhoneNumber { get; set; }
+        
+        [Display(Name ="Fordon")]
+        public ICollection<ParkedVehicle> ParkedVehicles { get; set; }
     }
 }

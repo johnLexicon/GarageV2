@@ -51,7 +51,9 @@ namespace GarageV2.Controllers
 
             IEnumerable<MemberListViewModel> memberListViewModels = members.Select(m =>
             {
-                return _mapper.Map<MemberListViewModel>(m);
+                _context.Entry(m).Collection(v => v.ParkedVehicles).Load();
+                var viewModel = _mapper.Map<MemberListViewModel>(m);
+                return viewModel;
             });
             return View(memberListViewModels);
         }

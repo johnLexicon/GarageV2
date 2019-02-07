@@ -113,6 +113,7 @@ namespace GarageV2.Controllers
                 return NotFound();
             }
 
+            _context.Entry(parkedVehicle).Reference(pv => pv.VehicleType).Load();
             DetailVehicleViewModel viewModel = _mapper.Map<DetailVehicleViewModel>(parkedVehicle);
 
             return View(viewModel);
@@ -251,19 +252,38 @@ namespace GarageV2.Controllers
         /// </summary>
         /// <param name="noParkedVehicles">The number of parked vehicles to generate.</param>
         /// <returns>The view with the list of the parked vehicles.</returns>
-        [Route("/generate/{noParkedVehicles}")]
-        public IActionResult GenerateParkedVehicles(int noParkedVehicles)
+        [Route("ParkedVehicles/Generate/{noParkedVehicles}")]
+        public IActionResult GenerateParkedVehicles(int noParkedVehicles = 5)
         {
+            Random rnd = new Random();
+            var existingRegNumbers = _context.ParkedVehicle.Select(pv => pv.RegNo).ToList();
+            var existingMembers = _context.Member.ToList();
+            var existingVehicleTypes = _context.VehicleType.ToList();
+
+
+            if(existingMembers.Count() == 0)
+            {
+                return RedirectToAction(nameof(Index));
+            }
 
             for (int i = 0; i < noParkedVehicles; i++)
             {
                 var generatedVehicle = _vehicleGenerator.GenerateVehicle();
-                if (_context.ParkedVehicle.FirstOrDefault(p => p.RegNo.Equals(generatedVehicle.RegNo)) is null)
+
+                if (existingRegNumbers.IndexOf(generatedVehicle.RegNo) == -1)
                 {
+                    existingRegNumbers.Add(generatedVehicle.RegNo);
+                    generatedVehicle.Member = existingMembers.ElementAt(rnd.Next(existingMembers.Count() - 1));
+                    if(existingVehicleTypes.Count() > 0)
+                    {
+                        generatedVehicle.VehicleType = existingVehicleTypes.ElementAt(rnd.Next(existingVehicleTypes.Count() - 1));
+                    }
+
                     _context.Add(generatedVehicle);
-                    _context.SaveChanges();
                 }
             }
+
+            _context.SaveChanges();
 
             return RedirectToAction(nameof(Index));
         }
