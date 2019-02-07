@@ -182,7 +182,8 @@ body {
     max-height: 300px;
 }
 
-.white-content-holder {
+.white-content-holder{
+
     padding: 25px;
     margin: 25px;
     background-color: white;
