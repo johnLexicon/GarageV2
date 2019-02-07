@@ -46,16 +46,34 @@ namespace GarageV2.Controllers
         {
             //Query for retrieving all vehicles.
             var model = from m in _context.ParkedVehicle
+                            //.Include(v => v.VehicleType)  
+                            //.Include(m => m.Member)       
                         select m;
 
-            
-            //context.Entry(student).Reference(s => s.StudentAddress).Load();
+
+            // --- Filter ---
 
             if (!String.IsNullOrEmpty(searchString))
             {
                 //Query for retrieving vehicles that contain the searchstring in the reg number.
-                model = _context.ParkedVehicle.Where(pv => pv.RegNo.Contains(searchString));
+                model = _context.ParkedVehicle
+                //.Include(v => v.VehicleType)
+                //.Include(m => m.Member)
+               
+                .Where(
+                    pv => pv.Member.Email.ToUpper().Contains(searchString.ToUpper()) ||
+                    pv.RegNo.ToUpper().Contains(searchString.ToUpper()) ||
+                    pv.VehicleType.Name.ToLower().Contains(searchString.ToLower()) ||
+                    pv.Brand.ToLower().Contains(searchString.ToLower()) ||
+                    pv.Model.ToLower().Contains(searchString.ToLower()) ||
+                    pv.Color.ToLower().Contains(searchString.ToLower())
+
+                );
+               
             }
+
+
+            // --- Create ParkedCarViewModel ---
 
             var parkedVehicles = await model.ToListAsync();
 
@@ -69,7 +87,7 @@ namespace GarageV2.Controllers
             }).OrderByDescending(vm => vm.TimeParked);
 
 
-            return View(ParkedCarViewModel);            
+            return View(ParkedCarViewModel);
         }
 
 
@@ -107,7 +125,7 @@ namespace GarageV2.Controllers
         /// <returns></returns>
         public IActionResult AddOrEdit(int id = 0)
         {
-            //Create
+            // - Create -
             if (id == 0)
             {
                 var viewModel = new AddOrEditViewModel()
@@ -117,7 +135,7 @@ namespace GarageV2.Controllers
                 };
                 return View(viewModel);
             }
-            //Edit
+            // - Edit -
             else
             {
                 var parkedVehicle = _context.ParkedVehicle.Find(id);
@@ -127,9 +145,9 @@ namespace GarageV2.Controllers
 
                 return View(viewModel);
             }
-                
 
-                
+
+
         }
 
         /// <summary>
@@ -151,13 +169,13 @@ namespace GarageV2.Controllers
                     viewModel.CheckIn = DateTime.UtcNow.ToLocalTime();
                     var parkedVehicle = _mapper.Map<ParkedVehicle>(viewModel);
                     _context.Add(parkedVehicle);
-                }                    
+                }
                 else
                 {
                     var parkedVehicle = _mapper.Map<ParkedVehicle>(viewModel);
                     _context.Update(parkedVehicle);
                 }
-                    
+
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
@@ -176,7 +194,7 @@ namespace GarageV2.Controllers
             var parkedVehicle = await _context.ParkedVehicle.FindAsync(id);
 
             //Redirects to not found (Error404 page) if parked vehicle is null.
-            if(parkedVehicle is null)
+            if (parkedVehicle is null)
             {
                 return NotFound();
             }
@@ -202,7 +220,7 @@ namespace GarageV2.Controllers
 
             var foundVehicle = _context.ParkedVehicle.FirstOrDefault(p => p.RegNo.Equals(regNo.ToUpper()));
 
-            if(foundVehicle != null && foundVehicle.Id != id)
+            if (foundVehicle != null && foundVehicle.Id != id)
             {
                 return Json($"Reg-nummer {regNo} finns redan.");
             }
@@ -222,7 +240,7 @@ namespace GarageV2.Controllers
             for (int i = 0; i < noParkedVehicles; i++)
             {
                 var generatedVehicle = _vehicleGenerator.GenerateVehicle();
-                if(_context.ParkedVehicle.FirstOrDefault(p => p.RegNo.Equals(generatedVehicle.RegNo)) is null)
+                if (_context.ParkedVehicle.FirstOrDefault(p => p.RegNo.Equals(generatedVehicle.RegNo)) is null)
                 {
                     _context.Add(generatedVehicle);
                     _context.SaveChanges();
