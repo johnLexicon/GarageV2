@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GarageV2.Models;
 using GarageV2.ViewModels;
 using AutoMapper;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using GarageV2.Services;
+using AutoMapper.QueryableExtensions;
 
 namespace GarageV2.Controllers
 {
@@ -45,21 +43,15 @@ namespace GarageV2.Controllers
         public async Task<IActionResult> Index(string searchString)
         {
             //Query for retrieving all vehicles.
-            var model = from m in _context.ParkedVehicle
-                            //.Include(v => v.VehicleType)  
-                            //.Include(m => m.Member)       
-                        select m;
-
+            var parkedVehicles = from pv in _context.ParkedVehicle select pv;
 
             // --- Filter ---
 
             if (!String.IsNullOrEmpty(searchString))
             {
                 //Query for retrieving vehicles that contain the searchstring in the reg number.
-                model = _context.ParkedVehicle
-                //.Include(v => v.VehicleType)
-                //.Include(m => m.Member)
-               
+                parkedVehicles = _context.ParkedVehicle
+
                 .Where(
                     pv => pv.Member.Email.ToUpper().Contains(searchString.ToUpper()) ||
                     pv.RegNo.ToUpper().Contains(searchString.ToUpper()) ||
@@ -69,25 +61,18 @@ namespace GarageV2.Controllers
                     pv.Color.ToLower().Contains(searchString.ToLower())
 
                 );
-               
+
             }
 
 
             // --- Create ParkedCarViewModel ---
 
-            var parkedVehicles = await model.ToListAsync();
+            var parkedCarViewModels = await parkedVehicles
+                .ProjectTo<ParkedCarViewModel>(_mapper.ConfigurationProvider)
+                .OrderByDescending(vm => vm.TimeParked)
+                .ToListAsync();
 
-            IEnumerable<ParkedCarViewModel> ParkedCarViewModel = parkedVehicles.Select(p =>
-            {
-                _context.Entry(p).Reference(v => v.Member).Load();
-                _context.Entry(p).Reference(v => v.VehicleType).Load();
-                var viewModel = _mapper.Map<ParkedCarViewModel>(p);
-                viewModel.TimeParked = (DateTime.UtcNow.ToLocalTime() - p.CheckIn);
-                return viewModel;
-            }).OrderByDescending(vm => vm.TimeParked);
-
-
-            return View(ParkedCarViewModel);                  
+            return View(parkedCarViewModels);
         }
 
 
@@ -106,6 +91,7 @@ namespace GarageV2.Controllers
             }
 
             var parkedVehicle = await _context.ParkedVehicle
+                .Include(pv => pv.VehicleType)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (parkedVehicle == null)
@@ -113,7 +99,7 @@ namespace GarageV2.Controllers
                 return NotFound();
             }
 
-            _context.Entry(parkedVehicle).Reference(pv => pv.VehicleType).Load();
+            //_context.Entry(parkedVehicle).Reference(pv => pv.VehicleType).Load();
             DetailVehicleViewModel viewModel = _mapper.Map<DetailVehicleViewModel>(parkedVehicle);
 
             return View(viewModel);
@@ -150,9 +136,6 @@ namespace GarageV2.Controllers
                 viewModel.Members = members;
                 return View(viewModel);
             }
-                
-
-                
         }
 
         /// <summary>
@@ -201,7 +184,10 @@ namespace GarageV2.Controllers
         /// <returns>The Receipt view</returns>
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var parkedVehicle = await _context.ParkedVehicle.FindAsync(id);
+            var parkedVehicle = await _context.ParkedVehicle
+                .Include(pv => pv.VehicleType)
+                .Include(pv => pv.Member)
+                .FirstOrDefaultAsync(pv => pv.Id == id);
 
             //Redirects to not found (Error404 page) if parked vehicle is null.
             if (parkedVehicle is null)
@@ -209,15 +195,16 @@ namespace GarageV2.Controllers
                 return NotFound();
             }
 
-            _context.Entry(parkedVehicle).Reference(pv => pv.Member).Load();
-            _context.Entry(parkedVehicle).Reference(pv => pv.VehicleType).Load();
+            //_context.Entry(parkedVehicle).Reference(pv => pv.Member).Load();
+            //_context.Entry(parkedVehicle).Reference(pv => pv.VehicleType).Load();
+
+            ReceiptParkingViewModel viewModel = _mapper.Map<ReceiptParkingViewModel>(parkedVehicle);
 
             _context.ParkedVehicle.Remove(parkedVehicle);
 
             await _context.SaveChangesAsync();
             //_context.Entry(p).Reference(v => v.Member).Load();
 
-            ReceiptParkingViewModel viewModel = _mapper.Map<ReceiptParkingViewModel>(parkedVehicle);
             viewModel.Checkout = DateTime.UtcNow.ToLocalTime();
             viewModel.Price = _garageSettings.PricePerMinute;
 
@@ -232,7 +219,7 @@ namespace GarageV2.Controllers
         /// <returns></returns>
         public IActionResult CheckIfRegNoExists(string regNo, int id)
         {
-            if(regNo is null)
+            if (regNo is null)
             {
                 return NotFound();
             }
@@ -261,7 +248,7 @@ namespace GarageV2.Controllers
             var existingVehicleTypes = _context.VehicleType.ToList();
 
 
-            if(existingMembers.Count() == 0)
+            if (!existingMembers.Any())
             {
                 return RedirectToAction(nameof(Index));
             }
@@ -274,7 +261,7 @@ namespace GarageV2.Controllers
                 {
                     existingRegNumbers.Add(generatedVehicle.RegNo);
                     generatedVehicle.Member = existingMembers.ElementAt(rnd.Next(existingMembers.Count() - 1));
-                    if(existingVehicleTypes.Count() > 0)
+                    if (existingVehicleTypes.Any())
                     {
                         generatedVehicle.VehicleType = existingVehicleTypes.ElementAt(rnd.Next(existingVehicleTypes.Count() - 1));
                     }

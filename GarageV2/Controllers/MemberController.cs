@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using GarageV2.Models;
 using GarageV2.Services;
 using GarageV2.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
 
 namespace GarageV2.Controllers
 {
@@ -28,35 +29,32 @@ namespace GarageV2.Controllers
         public async Task<IActionResult> Index(string searchString)
         {
             // Query for retrieving all members
-            var model = from m in _context.Member                        
+            var members = from m in _context.Member                        
                         select m;
 
             // - Filter -
             if (!String.IsNullOrEmpty(searchString))
             {
                 // Query for retrieving members that contain the searchstring
-                model = _context.Member                
+                members = _context.Member                
                 .Where(
                     pv => pv.Email.ToLower().Contains(searchString.ToLower()) ||                    
                     pv.FirstName.ToLower().Contains(searchString.ToLower()) ||
                     pv.LastName.ToLower().Contains(searchString.ToLower()) ||
                     pv.PhoneNumber.ToLower().Contains(searchString.ToLower())                    
                 );
-
             }
 
             // --- Create MemberListViewModel ---
-            
-            var members = await model.ToListAsync();
 
-            IEnumerable<MemberListViewModel> memberListViewModels = members.Select(m =>
-            {
-                _context.Entry(m).Collection(v => v.ParkedVehicles).Load();
-                var viewModel = _mapper.Map<MemberListViewModel>(m);
-                return viewModel;
-            });
+            var memberListViewModels = await members
+                //.Include(m => m.ParkedVehicles)
+                .ProjectTo<MemberListViewModel>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
             return View(memberListViewModels);
         }
+
 
         public IActionResult Details(int? id)
         {
@@ -65,14 +63,16 @@ namespace GarageV2.Controllers
                 return NotFound();
             }
 
-            var member = _context.Member.FirstOrDefault(m => m.Id == id);
+            var member = _context.Member
+                .Include(m => m.ParkedVehicles)
+                .FirstOrDefault(m => m.Id == id);
 
             if (member is null)
             {
                 return NotFound();
             }
 
-            _context.Entry(member).Collection(m => m.ParkedVehicles).Load();
+            //_context.Entry(member).Collection(m => m.ParkedVehicles).Load();
             DetailsMemberViewModel viewModel = _mapper.Map<DetailsMemberViewModel>(member);
 
             return View(viewModel);
@@ -135,7 +135,7 @@ namespace GarageV2.Controllers
             {
                 return NotFound();
             }
-
+            //TODO: Remove toLower check if it works using property with field in the view.
             var foundMember = _context.Member.FirstOrDefault(p => p.Email.ToLower().Equals(email.ToLower()));
             if (foundMember != null && foundMember.Id != id)
             {
