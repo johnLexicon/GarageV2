@@ -34,15 +34,23 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.PhoneNumber)
         </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ParkedVehiclesInfo)
+        </dt>
+        @foreach (var item in Model.ParkedVehiclesInfo)
+        {
+            <dd class="col-sm-10">
+                <a asp-controller="ParkedVehicles" asp-action="Details" asp-route-id="@item.Item1">@item.Item2</a>
+            </dd>
+        }
     </dl>
 
-    @foreach (var item in Model.ParkedVehicles)
+    @*@foreach (var item in Model.ParkedVehicles)
     {
         context.Entry(item).Reference(pv => pv.VehicleType).Load();
         var viewModel = mapper.Map<DetailVehicleViewModel>(item);
         <partial name="_ParkedVehicleInfo" model="viewModel" />
-        @*@Html.Partial("_ParkedVehicleInfo", viewModel);*@
-    }
+    }*@
 
 </div>
 <div>

@@ -23,6 +23,12 @@ namespace GarageV2.Models
             CreateMap<Member, MemberAddOrEditViewModel>();
             CreateMap<MemberAddOrEditViewModel, Member>();
             CreateMap<MemberListViewModel, Member>();
+
+            CreateMap<Member, DetailsMemberViewModel>()
+                .ForMember(dest => dest.ParkedVehiclesInfo,
+                            from => {
+                                from.MapFrom(m => m.ParkedVehicles.Select(pv => new Tuple<int, string>(pv.Id, pv.RegNo)));
+                            });
         }
     }
 }
