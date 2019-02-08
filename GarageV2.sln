@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.271
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GarageV2", "GarageV2\GarageV2.csproj", "{655B2EC7-8C6D-42EB-92D5-E52F053DCAB2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserLogin", "UserLogin\UserLogin.csproj", "{A84FDE05-3087-4951-BB1F-0C93740825C0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{655B2EC7-8C6D-42EB-92D5-E52F053DCAB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{655B2EC7-8C6D-42EB-92D5-E52F053DCAB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{655B2EC7-8C6D-42EB-92D5-E52F053DCAB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A84FDE05-3087-4951-BB1F-0C93740825C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A84FDE05-3087-4951-BB1F-0C93740825C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A84FDE05-3087-4951-BB1F-0C93740825C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A84FDE05-3087-4951-BB1F-0C93740825C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
