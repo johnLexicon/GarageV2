@@ -37,7 +37,7 @@
                 @Html.DisplayNameFor(model => model.PhoneNumber)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ParkedVehicles)
+                @Html.DisplayNameFor(model => model.ParkedVehiclesCount)
             </th>
             <th>
             <a asp-action="AddOrEdit" class="btn btn-outline-success"><i class="fas fa-address-card"></i> Registrera</a>
@@ -62,7 +62,7 @@
                 @Html.DisplayFor(modelItem => item.PhoneNumber)
             </td>
             <td>
-                @Html.DisplayFor(model => item.ParkedVehicles.Count)
+                @Html.DisplayFor(model => item.ParkedVehiclesCount)
             </td>
             <td>
                 <a asp-action="AddOrEdit" asp-route-id="@item.Id"><i class="fas fa-edit"></i> Ändra</a>

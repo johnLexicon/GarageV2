@@ -26,6 +26,7 @@ namespace GarageV2.ViewModels
         public string PhoneNumber { get; set; }
         
         [Display(Name ="Fordon")]
-        public ICollection<ParkedVehicle> ParkedVehicles { get; set; }
+        public int ParkedVehiclesCount { get; set; }
+        //public ICollection<ParkedVehicle> ParkedVehicles { get; set; }
     }
 }

@@ -24,7 +24,8 @@ namespace GarageV2.ViewModels
 
         //TODO: See if there is another way to retrieve the chosen select value.
         public int VehicleTypeId { get; set; }
-        
+
+
         [Display(Name = "Fordonstyp")]
         public IEnumerable<SelectListItem> FormattedParkedVehicleTypes
         { get => ParkedVehicleTypes.Select(t => new SelectListItem { Value = t.Id.ToString(), Text = t.Name.ToString() }); }
