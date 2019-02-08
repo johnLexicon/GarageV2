@@ -112,8 +112,15 @@ namespace GarageV2.Controllers
         /// <returns></returns>
         public IActionResult AddOrEdit(int id = 0)
         {
-            var parkedVehicleTypes = _context.VehicleType.ToList();
             var members = _context.Member.ToList();
+
+            if(members.Count == 0)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            var parkedVehicleTypes = _context.VehicleType.ToList();
+            
 
             //Create
             if (id == 0)
