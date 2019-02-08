@@ -40,7 +40,8 @@
     {
         context.Entry(item).Reference(pv => pv.VehicleType).Load();
         var viewModel = mapper.Map<DetailVehicleViewModel>(item);
-        @Html.Partial("_ParkedVehicleInfo", viewModel);
+        <partial name="_ParkedVehicleInfo" model="viewModel" />
+        @*@Html.Partial("_ParkedVehicleInfo", viewModel);*@
     }
 
 </div>
