@@ -246,7 +246,7 @@ namespace GarageV2.Controllers
         /// </summary>
         /// <param name="noParkedVehicles">The number of parked vehicles to generate.</param>
         /// <returns>The view with the list of the parked vehicles.</returns>
-        [Route("ParkedVehicles/Generate/{noParkedVehicles}")]
+        [Route("ParkedVehicles/Generate/{noParkedVehicles?}")]
         public IActionResult GenerateParkedVehicles(int noParkedVehicles = 5)
         {
             Random rnd = new Random();

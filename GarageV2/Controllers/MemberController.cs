@@ -144,7 +144,7 @@ namespace GarageV2.Controllers
             return Json(true);
         }
 
-        [Route("Member/Generate/{noMembers}")]
+        [Route("Member/Generate/{noMembers?}")]
         public IActionResult GenerateMembers(int noMembers = 5)
         {
             var existingEmails = _context.Member.Select(m => m.Email).ToList();
