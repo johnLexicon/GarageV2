@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace GarageV2.Models
 {
-    public class GarageV2Context : DbContext
+    public class GarageV2Context : IdentityDbContext<IdentityUser>
     {
         public GarageV2Context (DbContextOptions<GarageV2Context> options)
             : base(options)

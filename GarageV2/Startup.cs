@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using GarageV2.Models;
 using AutoMapper;
 using GarageV2.Services;
+using Microsoft.AspNetCore.Identity;
 
 namespace GarageV2
 {
@@ -43,6 +38,9 @@ namespace GarageV2
                 options.UseSqlServer(Configuration.GetConnectionString("GarageV2Context"))
                 //options.UseSqlServer(Configuration.GetConnectionString("GarageV2Mac"))
             );
+
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<GarageV2Context>(); //The database context where to store the security info.
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -64,6 +62,10 @@ namespace GarageV2
 
             //For using custom Error404 page.
             app.UseStatusCodePagesWithRedirects("/Home/Error404");
+
+            //Needs to be implemented before useMvc.
+            //Middleware that handles the cookies used for the Core Identity.
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {
