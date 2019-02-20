@@ -8,6 +8,7 @@ using GarageV2.ViewModels;
 using AutoMapper;
 using GarageV2.Services;
 using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GarageV2.Controllers
 {
@@ -110,6 +111,7 @@ namespace GarageV2.Controllers
         /// </summary>
         /// <param name="id">The id of the vehicle</param>
         /// <returns></returns>
+        [Authorize]
         public IActionResult AddOrEdit(int id = 0)
         {
             var members = _context.Member.ToList();
