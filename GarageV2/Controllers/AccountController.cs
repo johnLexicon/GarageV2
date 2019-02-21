@@ -52,5 +52,11 @@ namespace GarageV2.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
+        public async Task<IActionResult> Logoff()
+        {
+            await _signInManager.SignOutAsync();
+            return View("LoggedOut");
+        }
     }
 }
