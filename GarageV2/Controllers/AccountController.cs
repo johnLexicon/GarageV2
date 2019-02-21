@@ -27,16 +27,30 @@ namespace GarageV2.Controllers
 
         //Post
         [HttpPost]
-        public IActionResult Login(LoginViewModel loginViewModel)
+        public async Task<IActionResult> Login(LoginViewModel loginViewModel)
         {
-            if (ModelState.IsValid)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            else
+            if (!ModelState.IsValid)
             {
                 return View(loginViewModel);
             }
+
+            var user = await _userManager.FindByNameAsync(loginViewModel.Email); 
+
+            if(user is null)
+            {
+                ModelState.AddModelError("", "User name not found");
+                return View(loginViewModel);
+            }
+
+            var loginResult = await _signInManager.PasswordSignInAsync(user, loginViewModel.Password, isPersistent: false, lockoutOnFailure: false);
+
+            if (!loginResult.Succeeded)
+            {
+                ModelState.AddModelError("", "Wrong password");
+                return View(loginViewModel);
+            }
+
+            return RedirectToAction("Index", "Home");
         }
 
         //Get
