@@ -14,8 +14,6 @@ namespace GarageV2.ViewModels
         [EmailAddress(ErrorMessage = "Fel format på e-post adress")]
         [Display(Name = "E-post")]
         public string Email { get; set; }
-        //TODO: Find out why this does not work!!
-        //public string Email { get { return _email; } set { _email = value.ToLower(); } }
 
         [Display(Name = "Förnamn")]
         [StringLength(maximumLength: 20, ErrorMessage = "Förnamn får inte vara längre än 20 tecken")]
@@ -30,5 +28,15 @@ namespace GarageV2.ViewModels
         [Display(Name = "Telefonnummer")]
         public string PhoneNumber { get; set; }
 
+        [Display(Name = "Lösenord")]
+        [DataType(DataType.Password)]
+        [Required]
+        public string Password { get; set; }
+
+        [Display(Name = "Bekräfta lösenord")]
+        [DataType(DataType.Password)]
+        [Required]
+        [CompareAttribute("Password", ErrorMessage = "Lösenord ej lika")]
+        public string PasswordVerify { get; set; }
     }
 }
