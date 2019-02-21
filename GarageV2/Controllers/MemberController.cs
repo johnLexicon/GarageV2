@@ -86,14 +86,12 @@ namespace GarageV2.Controllers
             //Create
             if(id == 0)
             {
-                viewModel = new MemberAddOrEditViewModel();
+                return View();
             }
+            
             //Edit
-            else
-            {
-                var member = _context.Member.Find(id);
-                viewModel = _mapper.Map<MemberAddOrEditViewModel>(member);
-            }
+            var member = _context.Member.Find(id);
+            viewModel = _mapper.Map<MemberAddOrEditViewModel>(member);
 
             return View(viewModel);
         }
