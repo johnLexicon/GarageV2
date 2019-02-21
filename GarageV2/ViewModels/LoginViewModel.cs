@@ -16,10 +16,5 @@ namespace GarageV2.ViewModels
         [Required]
         public string Password { get; set; }
 
-        [Display(Name = "Bekräfta lösenord")]
-        [DataType(DataType.Password)]
-        [Required]
-        [CompareAttribute("Password", ErrorMessage = "Lösenord ej lika")]
-        public string PasswordVerify { get; set; }
     }
 }
