@@ -154,11 +154,9 @@ namespace GarageV2.Controllers
         {
             if (ModelState.IsValid)
             {
-                var vehicleType = _context.VehicleType.Find(viewModel.VehicleTypeId);
-
+                var vehicleType = await _context.VehicleType.FindAsync(viewModel.VehicleTypeId);
                 var loggedInUser = await _userManager.GetUserAsync(HttpContext.User);
-
-                var member = _context.Member.FirstOrDefault(m => m.Email.ToUpper() == loggedInUser.NormalizedEmail);
+                var member = await _context.Member.FirstOrDefaultAsync(m => m.Email.ToUpper() == loggedInUser.NormalizedEmail);
 
                 if (!viewModel.AlreadyParked)
                 {
