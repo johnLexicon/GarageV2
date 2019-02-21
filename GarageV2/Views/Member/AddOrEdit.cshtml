@@ -11,6 +11,8 @@
 
         <form asp-action="AddOrEdit">
 
+            <div asp-validation-summary="All" class="text-danger"></div>
+
             <div class="form-row">
 
                 <div class="form-group col-md-6">
@@ -27,9 +29,10 @@
             </div>
 
             <div class="form-row">
+
                 <div class="form-group col-md-6">
                     <label asp-for="Email" class="control-label"></label>
-                    <input asp-for="Email" class="form-control" />
+                    <input asp-for="Email" class="form-control" disabled="@(Model.IsEditMode)" />
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
 
@@ -41,21 +44,26 @@
 
             </div>
 
-            <div class="form-row">
+            @if (!Model.IsEditMode)
+            {
 
-                <div class="form-group col-md-6">
-                    <label class="control-label" asp-for="Password"></label>
-                    <input class="form-control" asp-for="Password" />
-                    <span asp-validation-for="Password" class="text-danger"></span>
+                <div class="form-row">
+
+                    <div class="form-group col-md-6">
+                        <label class="control-label" asp-for="Password"></label>
+                        <input class="form-control" asp-for="Password" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label class="control-label" asp-for="PasswordVerify"></label>
+                        <input class="form-control" asp-for="PasswordVerify" />
+                        <span asp-validation-for="PasswordVerify" class="text-danger"></span>
+                    </div>
+
                 </div>
 
-                <div class="form-group col-md-6">
-                    <label class="control-label" asp-for="PasswordVerify"></label>
-                    <input class="form-control" asp-for="PasswordVerify" />
-                    <span asp-validation-for="PasswordVerify" class="text-danger"></span>
-                </div>
-
-            </div>
+            }
 
             <div class="form-row">
                 <div class="form-group col-md-6">
@@ -67,6 +75,7 @@
                     <a asp-action="Index" class="btn btn-secondary btn-block"><i class="fas fa-address-card"></i> Till Medlemslistan</a>
                 </div>
             </div>
+
             <input asp-for="Id" type="hidden" />
         </form>
     </div>

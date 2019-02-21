@@ -5,13 +5,14 @@ namespace GarageV2.ViewModels
 {
     public class MemberAddOrEditViewModel
     {
-        //private string _email;
 
         public int Id { get; set; }
 
+        public bool IsEditMode { get => Id != 0; }
+
         [Remote(action: "CheckIfEmailAlreadyExists", controller: "Member", AdditionalFields = nameof(Id))]
         [Required(ErrorMessage = "E-post adress är obligatorisk")]
-        [EmailAddress(ErrorMessage = "Fel format på e-post adress")]
+        [DataType(DataType.EmailAddress)]
         [Display(Name = "E-post")]
         public string Email { get; set; }
 
@@ -30,13 +31,12 @@ namespace GarageV2.ViewModels
 
         [Display(Name = "Lösenord")]
         [DataType(DataType.Password)]
-        [Required]
+        [Required(ErrorMessage = "Lösenord är obligatorisk")]
         public string Password { get; set; }
 
         [Display(Name = "Bekräfta lösenord")]
         [DataType(DataType.Password)]
-        [Required]
-        [CompareAttribute("Password", ErrorMessage = "Lösenord ej lika")]
+        [Compare("Password", ErrorMessage = "Lösenord ej lika")]
         public string PasswordVerify { get; set; }
     }
 }

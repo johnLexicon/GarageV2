@@ -6,6 +6,7 @@ using AutoMapper.QueryableExtensions;
 using GarageV2.Models;
 using GarageV2.Services;
 using GarageV2.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,12 +19,14 @@ namespace GarageV2.Controllers
         private readonly GarageV2Context _context;
         private readonly IMapper _mapper;
         private readonly ParkedVehicleGenerator _parkedVehicleGenerator;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public MemberController(GarageV2Context context, IMapper mapper, ParkedVehicleGenerator parkedVehicleGenerator)
+        public MemberController(GarageV2Context context, IMapper mapper, ParkedVehicleGenerator parkedVehicleGenerator, UserManager<IdentityUser> userManager)
         {
             _context = context;
             _mapper = mapper;
             _parkedVehicleGenerator = parkedVehicleGenerator;
+            _userManager = userManager;
         }
         
         public async Task<IActionResult> Index(string searchString)
@@ -86,7 +89,7 @@ namespace GarageV2.Controllers
             //Create
             if(id == 0)
             {
-                return View();
+                return View(new MemberAddOrEditViewModel());
             }
             
             //Edit
@@ -97,17 +100,38 @@ namespace GarageV2.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddOrEdit(MemberAddOrEditViewModel viewModel)
+        public async Task<IActionResult> AddOrEdit(MemberAddOrEditViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
                 var member = _mapper.Map<Member>(viewModel);
 
                 //Create
+                //If create then also register with Core identity.
                 if (viewModel.Id == 0)
                 {
+                    var registerResult = await _userManager.CreateAsync(
+                        new IdentityUser
+                        {
+                            UserName = viewModel.Email,
+                            Email = viewModel.Email
+                        }, viewModel.Password);
+
+                    if (!registerResult.Succeeded)
+                    {
+                        foreach(var error in registerResult.Errors)
+                        {
+                            ModelState.AddModelError("error", error.Description);
+                        }
+
+                        return View(viewModel);
+                    }
+
                     _context.Add(member);
                 }
+                //Edit
+                //TODO: Important remove possibility to change email 
+                //TODO: Fix password change.
                 else
                 {
                     _context.Update(member);
