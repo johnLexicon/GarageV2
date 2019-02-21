@@ -39,7 +39,13 @@ namespace GarageV2
                 //options.UseSqlServer(Configuration.GetConnectionString("GarageV2Mac"))
             );
 
-            services.AddIdentity<IdentityUser, IdentityRole>()
+            services.AddIdentity<IdentityUser, IdentityRole>(options =>
+            {
+                /*** Password Policies ***/
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+            })
                 .AddEntityFrameworkStores<GarageV2Context>(); //The database context where to store the security info.
         }
 
