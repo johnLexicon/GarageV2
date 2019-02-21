@@ -9,6 +9,7 @@ using AutoMapper;
 using GarageV2.Services;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace GarageV2.Controllers
 {
@@ -18,6 +19,7 @@ namespace GarageV2.Controllers
         private readonly IMapper _mapper;
         private readonly ParkedVehicleGenerator _vehicleGenerator;
         private readonly GarageSettings _garageSettings;
+        private readonly UserManager<IdentityUser> _userManager;
 
         /// <summary>
         /// 
@@ -26,12 +28,13 @@ namespace GarageV2.Controllers
         /// <param name="mapper">For automapping</param>
         /// <param name="vehicleGenerator">Helper for generating vehicles</param>
         /// <param name="garageSettings">For accessing garage settings from Config file</param>
-        public ParkedVehiclesController(GarageV2Context context, IMapper mapper, ParkedVehicleGenerator vehicleGenerator, GarageSettings garageSettings)
+        public ParkedVehiclesController(GarageV2Context context, IMapper mapper, ParkedVehicleGenerator vehicleGenerator, GarageSettings garageSettings, UserManager<IdentityUser> userManager)
         {
             _context = context;
             _mapper = mapper;
             _vehicleGenerator = vehicleGenerator;
             _garageSettings = garageSettings;
+            _userManager = userManager;
         }
 
         // Get: Search Products
@@ -114,12 +117,6 @@ namespace GarageV2.Controllers
         [Authorize]
         public IActionResult AddOrEdit(int id = 0)
         {
-            var members = _context.Member.ToList();
-
-            if(members.Count == 0)
-            {
-                return RedirectToAction("Index", "Home");
-            }
 
             var parkedVehicleTypes = _context.VehicleType.ToList();
             
@@ -131,7 +128,6 @@ namespace GarageV2.Controllers
                 {
                     AlreadyParked = false,
                     ParkedVehicleTypes = parkedVehicleTypes,
-                    Members = members
                 };
                 return View(viewModel);
             }
@@ -142,7 +138,6 @@ namespace GarageV2.Controllers
                 var viewModel = _mapper.Map<AddOrEditViewModel>(parkedVehicle);
                 viewModel.ParkedVehicleTypes = parkedVehicleTypes;
                 viewModel.AlreadyParked = true;
-                viewModel.Members = members;
                 return View(viewModel);
             }
         }
@@ -154,19 +149,23 @@ namespace GarageV2.Controllers
         /// <returns>The AddOrEdit view</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> AddOrEdit(AddOrEditViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                var member = _context.Member.Find(viewModel.MemberId);
                 var vehicleType = _context.VehicleType.Find(viewModel.VehicleTypeId);
+
+                var loggedInUser = await _userManager.GetUserAsync(HttpContext.User);
+
+                var member = _context.Member.FirstOrDefault(m => m.Email.ToUpper() == loggedInUser.NormalizedEmail);
 
                 if (!viewModel.AlreadyParked)
                 {
                     viewModel.CheckIn = DateTime.UtcNow.ToLocalTime();
                     var parkedVehicle = _mapper.Map<ParkedVehicle>(viewModel);
-                    parkedVehicle.Member = member;
                     parkedVehicle.VehicleType = vehicleType;
+                    parkedVehicle.Member = member;
                     _context.Add(parkedVehicle);
                 }
                 else
@@ -175,7 +174,6 @@ namespace GarageV2.Controllers
                     parkedVehicle.VehicleType = vehicleType;
                     parkedVehicle.Member = member;
                     _context.Update(parkedVehicle);
-
                 }
 
                 await _context.SaveChangesAsync();

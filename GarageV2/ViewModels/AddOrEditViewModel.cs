@@ -49,12 +49,5 @@ namespace GarageV2.ViewModels
 
         public bool AlreadyParked { get; set; }
 
-        public int MemberId { get; set; }
-
-        public ICollection<Member> Members { get; set; }
-
-        public IEnumerable<SelectListItem> FormattedMembers { get => Members.Select(m => new SelectListItem { Value = m.Id.ToString(), Text = m.Email }); }
-
-
     }
 }
