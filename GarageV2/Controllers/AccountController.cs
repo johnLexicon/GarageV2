@@ -52,13 +52,5 @@ namespace GarageV2.Controllers
 
             return RedirectToAction("Index", "Home");
         }
-
-        //Get
-        public IActionResult Register()
-        {
-            return View();
-        }
-
-
     }
 }
