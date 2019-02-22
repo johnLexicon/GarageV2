@@ -35,11 +35,11 @@ namespace GarageV2
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddDbContext<GarageV2Context>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("GarageV2Context"))
-                //options.UseSqlServer(Configuration.GetConnectionString("GarageV2Mac"))
+                //options.UseSqlServer(Configuration.GetConnectionString("GarageV2Context"))
+                options.UseSqlServer(Configuration.GetConnectionString("GarageCIExtensionMac"))
             );
 
-            services.AddIdentity<IdentityUser, IdentityRole>(options =>
+            services.AddIdentity<Member, IdentityRole>(options =>
             {
                 /*** Password Policies ***/
                 options.Password.RequireNonAlphanumeric = false;

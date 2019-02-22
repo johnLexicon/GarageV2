@@ -20,9 +20,6 @@ namespace GarageV2.Models
         [Display(Name = "Reg-nummer")]
         public string RegNo { get; set; }
 
-        //[Display(Name = "Fordonstyp")]
-        //public VehicleType ParkedVehicleType { get; set; }
-
         [Display(Name = "Färg")]
         [StringLength(8, MinimumLength = 3, ErrorMessage = "Färg ska vara en sträng mellan 3 till 8 tecken")]
         public string Color { get; set; }

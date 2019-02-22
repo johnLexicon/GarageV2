@@ -19,7 +19,7 @@ namespace GarageV2.Controllers
         private readonly IMapper _mapper;
         private readonly ParkedVehicleGenerator _vehicleGenerator;
         private readonly GarageSettings _garageSettings;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<Member> _userManager;
 
         /// <summary>
         /// 
@@ -28,7 +28,7 @@ namespace GarageV2.Controllers
         /// <param name="mapper">For automapping</param>
         /// <param name="vehicleGenerator">Helper for generating vehicles</param>
         /// <param name="garageSettings">For accessing garage settings from Config file</param>
-        public ParkedVehiclesController(GarageV2Context context, IMapper mapper, ParkedVehicleGenerator vehicleGenerator, GarageSettings garageSettings, UserManager<IdentityUser> userManager)
+        public ParkedVehiclesController(GarageV2Context context, IMapper mapper, ParkedVehicleGenerator vehicleGenerator, GarageSettings garageSettings, UserManager<Member> userManager)
         {
             _context = context;
             _mapper = mapper;
@@ -47,14 +47,14 @@ namespace GarageV2.Controllers
         public async Task<IActionResult> Index(string searchString)
         {
             //Query for retrieving all vehicles.
-            var parkedVehicles = from pv in _context.ParkedVehicle select pv;
+            var parkedVehicles = from pv in _context.ParkedVehicles select pv;
 
             // --- Filter ---
 
             if (!String.IsNullOrEmpty(searchString))
             {
                 //Query for retrieving vehicles that contain the searchstring in the reg number.
-                parkedVehicles = _context.ParkedVehicle
+                parkedVehicles = _context.ParkedVehicles
 
                 .Where(
                     pv => pv.Member.Email.ToUpper().Contains(searchString.ToUpper()) ||
@@ -94,7 +94,7 @@ namespace GarageV2.Controllers
                 return NotFound();
             }
 
-            var parkedVehicle = await _context.ParkedVehicle
+            var parkedVehicle = await _context.ParkedVehicles
                 .Include(pv => pv.VehicleType)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
@@ -118,7 +118,7 @@ namespace GarageV2.Controllers
         public IActionResult AddOrEdit(int id = 0)
         {
 
-            var parkedVehicleTypes = _context.VehicleType.ToList();
+            var parkedVehicleTypes = _context.VehicleTypes.ToList();
             
 
             //Create
@@ -134,7 +134,7 @@ namespace GarageV2.Controllers
             // - Edit -
             else
             {
-                var parkedVehicle = _context.ParkedVehicle.Find(id);
+                var parkedVehicle = _context.ParkedVehicles.Find(id);
                 var viewModel = _mapper.Map<AddOrEditViewModel>(parkedVehicle);
                 viewModel.ParkedVehicleTypes = parkedVehicleTypes;
                 viewModel.AlreadyParked = true;
@@ -154,9 +154,9 @@ namespace GarageV2.Controllers
         {
             if (ModelState.IsValid)
             {
-                var vehicleType = await _context.VehicleType.FindAsync(viewModel.VehicleTypeId);
+                var vehicleType = await _context.VehicleTypes.FindAsync(viewModel.VehicleTypeId);
                 var loggedInUser = await _userManager.GetUserAsync(HttpContext.User);
-                var member = await _context.Member.FirstOrDefaultAsync(m => m.Email.ToUpper() == loggedInUser.NormalizedEmail);
+                var member = await _context.Members.FirstOrDefaultAsync(m => m.Email.ToUpper() == loggedInUser.NormalizedEmail);
 
                 if (!viewModel.AlreadyParked)
                 {
@@ -189,7 +189,7 @@ namespace GarageV2.Controllers
         /// <returns>The Receipt view</returns>
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var parkedVehicle = await _context.ParkedVehicle
+            var parkedVehicle = await _context.ParkedVehicles
                 .Include(pv => pv.VehicleType)
                 .Include(pv => pv.Member)
                 .FirstOrDefaultAsync(pv => pv.Id == id);
@@ -205,7 +205,7 @@ namespace GarageV2.Controllers
 
             ReceiptParkingViewModel viewModel = _mapper.Map<ReceiptParkingViewModel>(parkedVehicle);
 
-            _context.ParkedVehicle.Remove(parkedVehicle);
+            _context.ParkedVehicles.Remove(parkedVehicle);
 
             await _context.SaveChangesAsync();
             //_context.Entry(p).Reference(v => v.Member).Load();
@@ -229,7 +229,7 @@ namespace GarageV2.Controllers
                 return NotFound();
             }
 
-            var foundVehicle = _context.ParkedVehicle.FirstOrDefault(p => p.RegNo.Equals(regNo.ToUpper()));
+            var foundVehicle = _context.ParkedVehicles.FirstOrDefault(p => p.RegNo.Equals(regNo.ToUpper()));
 
             if (foundVehicle != null && foundVehicle.Id != id)
             {
@@ -248,9 +248,9 @@ namespace GarageV2.Controllers
         public IActionResult GenerateParkedVehicles(int noParkedVehicles = 5)
         {
             Random rnd = new Random();
-            var existingRegNumbers = _context.ParkedVehicle.Select(pv => pv.RegNo).ToList();
-            var existingMembers = _context.Member.ToList();
-            var existingVehicleTypes = _context.VehicleType.ToList();
+            var existingRegNumbers = _context.ParkedVehicles.Select(pv => pv.RegNo).ToList();
+            var existingMembers = _context.Members.ToList();
+            var existingVehicleTypes = _context.VehicleTypes.ToList();
 
 
             if (!existingMembers.Any())

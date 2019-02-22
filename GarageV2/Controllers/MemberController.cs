@@ -19,9 +19,9 @@ namespace GarageV2.Controllers
         private readonly GarageV2Context _context;
         private readonly IMapper _mapper;
         private readonly ParkedVehicleGenerator _parkedVehicleGenerator;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<Member> _userManager;
 
-        public MemberController(GarageV2Context context, IMapper mapper, ParkedVehicleGenerator parkedVehicleGenerator, UserManager<IdentityUser> userManager)
+        public MemberController(GarageV2Context context, IMapper mapper, ParkedVehicleGenerator parkedVehicleGenerator, UserManager<Member> userManager)
         {
             _context = context;
             _mapper = mapper;
@@ -32,14 +32,14 @@ namespace GarageV2.Controllers
         public async Task<IActionResult> Index(string searchString)
         {
             // Query for retrieving all members
-            var members = from m in _context.Member                        
+            var members = from m in _context.Members                        
                         select m;
 
             // - Filter -
             if (!String.IsNullOrEmpty(searchString))
             {
                 // Query for retrieving members that contain the searchstring
-                members = _context.Member                
+                members = _context.Members                
                 .Where(
                     pv => pv.Email.ToLower().Contains(searchString.ToLower()) ||                    
                     pv.FirstName.ToLower().Contains(searchString.ToLower()) ||
@@ -59,14 +59,14 @@ namespace GarageV2.Controllers
         }
 
 
-        public IActionResult Details(int? id)
+        public IActionResult Details(string id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var member = _context.Member
+            var member = _context.Members
                 .Include(m => m.ParkedVehicles)
                 .FirstOrDefault(m => m.Id == id);
 
@@ -93,7 +93,7 @@ namespace GarageV2.Controllers
             }
             
             //Edit
-            var member = _context.Member.Find(id);
+            var member = _context.Members.Find(id);
             viewModel = _mapper.Map<MemberAddOrEditViewModel>(member);
 
             return View(viewModel);
@@ -111,7 +111,7 @@ namespace GarageV2.Controllers
                 if (viewModel.Id == 0)
                 {
                     var registerResult = await _userManager.CreateAsync(
-                        new IdentityUser
+                        new Member
                         {
                             UserName = viewModel.Email,
                             Email = viewModel.Email
@@ -151,14 +151,13 @@ namespace GarageV2.Controllers
         /// <param name="email">The email to check</param>
         /// <param name="id">The member id</param>
         /// <returns></returns>
-        public IActionResult CheckIfEmailAlreadyExists(string email, int id)
+        public IActionResult CheckIfEmailAlreadyExists(string email, string id)
         {
             if(email is null) 
             {
                 return NotFound();
             }
-            //TODO: Remove toLower check if it works using property with field in the view.
-            var foundMember = _context.Member.FirstOrDefault(p => p.Email.ToLower().Equals(email.ToLower()));
+            var foundMember = _context.Members.FirstOrDefault(p => p.Email.ToLower().Equals(email.ToLower()));
             if (foundMember != null && foundMember.Id != id)
             {
                 return Json($"E-post adressen {email} är redan registrerad");
@@ -169,7 +168,7 @@ namespace GarageV2.Controllers
         [Route("Member/Generate/{noMembers?}")]
         public IActionResult GenerateMembers(int noMembers = 5)
         {
-            var existingEmails = _context.Member.Select(m => m.Email).ToList();
+            var existingEmails = _context.Members.Select(m => m.Email).ToList();
             for(int i = 0; i < noMembers; i++)
             {
                 var member = _parkedVehicleGenerator.GenerateMember();
