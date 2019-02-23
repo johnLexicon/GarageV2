@@ -16,15 +16,12 @@ namespace GarageV2.Controllers
     public class MemberController : Controller
     {
 
-        private readonly GarageV2Context _context;
         private readonly IMapper _mapper;
         private readonly ParkedVehicleGenerator _parkedVehicleGenerator;
         private readonly UserManager<Member> _userManager;
 
-        //TODO: Check if you at the end need the actual context of if it is enough with the userManager.
-        public MemberController(GarageV2Context context, IMapper mapper, ParkedVehicleGenerator parkedVehicleGenerator, UserManager<Member> userManager)
+        public MemberController(IMapper mapper, ParkedVehicleGenerator parkedVehicleGenerator, UserManager<Member> userManager)
         {
-            _context = context;
             _mapper = mapper;
             _parkedVehicleGenerator = parkedVehicleGenerator;
             _userManager = userManager;
@@ -33,14 +30,14 @@ namespace GarageV2.Controllers
         public async Task<IActionResult> Index(string searchString)
         {
             // Query for retrieving all members
-            var members = from m in _context.Members                        
+            var members = from m in _userManager.Users                        
                         select m;
 
             // - Filter -
             if (!String.IsNullOrEmpty(searchString))
             {
                 // Query for retrieving members that contain the searchstring
-                members = _context.Members                
+                members = _userManager.Users                
                 .Where(
                     pv => pv.Email.ToLower().Contains(searchString.ToLower()) ||                    
                     pv.FirstName.ToLower().Contains(searchString.ToLower()) ||
@@ -172,7 +169,7 @@ namespace GarageV2.Controllers
         public async Task<IActionResult> GenerateMembers(int noMembers = 5)
         {
             //Retrieve the existing emails to be able to verify the generated ones do not already exists.
-            var existingEmails = await _context.Members.Select(m => m.Email).ToListAsync();
+            var existingEmails = await _userManager.Users.Select(m => m.Email).ToListAsync();
 
             int generatedMembers = 0;
             while(generatedMembers < noMembers)
