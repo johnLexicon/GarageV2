@@ -245,33 +245,36 @@ namespace GarageV2.Controllers
         /// <param name="noParkedVehicles">The number of parked vehicles to generate.</param>
         /// <returns>The view with the list of the parked vehicles.</returns>
         [Route("ParkedVehicles/Generate/{noParkedVehicles?}")]
-        public IActionResult GenerateParkedVehicles(int noParkedVehicles = 5)
+        public async Task<IActionResult> GenerateParkedVehicles(int noParkedVehicles = 5)
         {
             Random rnd = new Random();
-            var existingRegNumbers = _context.ParkedVehicles.Select(pv => pv.RegNo).ToList();
-            var existingMembers = _context.Members.ToList();
-            var existingVehicleTypes = _context.VehicleTypes.ToList();
+            var existingMembers = await _context.Members.ToListAsync();
 
-
+            //If there are no members in the system return to ParkedVehicles List page
             if (!existingMembers.Any())
             {
                 return RedirectToAction(nameof(Index));
             }
 
-            for (int i = 0; i < noParkedVehicles; i++)
-            {
-                var generatedVehicle = _vehicleGenerator.GenerateVehicle();
+            //Retrieve the existing regnumbers to be able to verify the generated ones do not already exists.
+            var existingRegNumbers = await _context.ParkedVehicles.Select(pv => pv.RegNo).ToListAsync();
 
-                if (existingRegNumbers.IndexOf(generatedVehicle.RegNo) == -1)
+            int generatedVehicles = 0;
+            while (generatedVehicles < noParkedVehicles)
+            {
+                var generatedRegNumber = _vehicleGenerator.GenerateRegNo();
+
+                //If the regnumber does not already exists
+                if (existingRegNumbers.IndexOf(generatedRegNumber) == -1)
                 {
-                    existingRegNumbers.Add(generatedVehicle.RegNo);
+                    var generatedVehicle = _vehicleGenerator.GenerateVehicle(generatedRegNumber);
+
                     generatedVehicle.Member = existingMembers.ElementAt(rnd.Next(existingMembers.Count() - 1));
-                    if (existingVehicleTypes.Any())
-                    {
-                        generatedVehicle.VehicleType = existingVehicleTypes.ElementAt(rnd.Next(existingVehicleTypes.Count() - 1));
-                    }
 
                     _context.Add(generatedVehicle);
+
+                    existingRegNumbers.Add(generatedVehicle.RegNo);
+                    generatedVehicles++;
                 }
             }
 

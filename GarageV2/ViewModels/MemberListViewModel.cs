@@ -9,7 +9,7 @@ namespace GarageV2.ViewModels
 {
     public class MemberListViewModel
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [EmailAddress]
         [Display(Name = "E-post")]

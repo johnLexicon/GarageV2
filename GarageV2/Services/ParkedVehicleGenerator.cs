@@ -1,31 +1,38 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using GarageV2.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace GarageV2.Services
 {
     public class ParkedVehicleGenerator
     {
-        Random _rnd;
+        private readonly Random _rnd;
+        private readonly GarageV2Context _context;
 
-        public ParkedVehicleGenerator()
+        public ParkedVehicleGenerator(GarageV2Context context)
         {
             _rnd = new Random();
+            _context = context;
         }
 
         /// <summary>
         /// Generates a parked vehicle randomizing the Vehicle type, Reg number and number or wheels.
         /// </summary>
         /// <returns></returns>
-        public ParkedVehicle GenerateVehicle()
+        public ParkedVehicle GenerateVehicle(string regNo)
         {
             DateTime dateTime = DateTime.UtcNow.ToLocalTime();
             dateTime = dateTime.AddMinutes(-(_rnd.Next(300)));
+            var vehicleTypes = _context.VehicleTypes.ToList();
+            VehicleType vehicleType = vehicleTypes.ElementAt(_rnd.Next(vehicleTypes.Count - 1));
 
             return new ParkedVehicle
             {
-                RegNo = GenerateRegNo(),
-                //ParkedVehicleType = (VehicleType)_rnd.Next(5),
+                RegNo = regNo,
+                VehicleType = vehicleType,
                 Brand = "TheBrand",
                 Model = "TheModel",
                 Color = "TheColor",
@@ -34,18 +41,19 @@ namespace GarageV2.Services
             };
         }
 
-        public Member GenerateMember()
+        public Member GenerateMember(string email)
         {
             return new Member
             {
-                Email = GenerateEmail(),
+                Email = email,
+                UserName = email,
                 FirstName = "First name",
                 LastName = "Last name",
                 PhoneNumber = _rnd.Next(1000000000).ToString()
             };
         }
 
-        private string GenerateEmail()
+        public string GenerateEmail()
         {
             StringBuilder stb = new StringBuilder();
 
@@ -64,7 +72,7 @@ namespace GarageV2.Services
         /// Method for generating the reg number
         /// </summary>
         /// <returns></returns>
-        private string GenerateRegNo()
+        public string GenerateRegNo()
         {
             StringBuilder stb = new StringBuilder();
 

@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using GarageV2.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace GarageV2.Models
 {
@@ -20,15 +18,23 @@ namespace GarageV2.Models
             CreateMap<ParkedVehicle, ReceiptParkingViewModel>();
             CreateMap<ParkedVehicle, AddOrEditViewModel>();
             CreateMap<AddOrEditViewModel, ParkedVehicle>();
-            CreateMap<Member, MemberAddOrEditViewModel>();
-            CreateMap<MemberAddOrEditViewModel, Member>();
+            CreateMap<Member, RegisterViewModel>();
+
+            //Mapping the Email from the viewmodel to the IdentityUser UserName.
+            CreateMap<RegisterViewModel, Member>()
+                .ForMember(dest => dest.UserName, from => from.MapFrom(src => src.Email));
+
             CreateMap<MemberListViewModel, Member>();
+
+            CreateMap<EditMemberViewModel, Member>();
+            CreateMap<Member, EditMemberViewModel>();
 
             CreateMap<Member, DetailsMemberViewModel>()
                 .ForMember(dest => dest.ParkedVehiclesInfo,
                             from => {
                                 from.MapFrom(m => m.ParkedVehicles.Select(pv => new Tuple<int, string>(pv.Id, pv.RegNo)));
                             });
+
         }
     }
 }

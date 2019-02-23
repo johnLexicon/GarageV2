@@ -21,6 +21,7 @@ namespace GarageV2.Controllers
         private readonly ParkedVehicleGenerator _parkedVehicleGenerator;
         private readonly UserManager<Member> _userManager;
 
+        //TODO: Check if you at the end need the actual context of if it is enough with the userManager.
         public MemberController(GarageV2Context context, IMapper mapper, ParkedVehicleGenerator parkedVehicleGenerator, UserManager<Member> userManager)
         {
             _context = context;
@@ -65,8 +66,8 @@ namespace GarageV2.Controllers
             {
                 return NotFound();
             }
-
-            var member = _context.Members
+            
+            var member = _userManager.Users
                 .Include(m => m.ParkedVehicles)
                 .FirstOrDefault(m => m.Id == id);
 
@@ -81,63 +82,69 @@ namespace GarageV2.Controllers
             return View(viewModel);
 
         }
-        
-        public IActionResult AddOrEdit(int id = 0)
-        {
-            MemberAddOrEditViewModel viewModel = null;
 
-            //Create
-            if(id == 0)
+        public async Task<IActionResult> Edit(string id)
+        {
+            var member = await _userManager.FindByIdAsync(id);
+            if(member is null)
             {
-                return View(new MemberAddOrEditViewModel());
+                return NotFound();
             }
-            
-            //Edit
-            var member = _context.Members.Find(id);
-            viewModel = _mapper.Map<MemberAddOrEditViewModel>(member);
+
+            var viewModel = _mapper.Map<EditMemberViewModel>(member);
 
             return View(viewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddOrEdit(MemberAddOrEditViewModel viewModel)
+        public async Task<IActionResult> Edit(EditMemberViewModel viewModel)
+        {
+
+            if (ModelState.IsValid)
+            {
+                var member = await _userManager.FindByIdAsync(viewModel.Id);
+
+                //Map to the existing object instead of creating a new instance of it.
+                //The properties in the destination that not exist in the source are left with their existing values.
+                _mapper.Map(viewModel, member);
+
+                var updateResult = await _userManager.UpdateAsync(member);
+
+                if (!updateResult.Succeeded)
+                {
+                    foreach (var error in updateResult.Errors)
+                    {
+                        ModelState.AddModelError("error", error.Description);
+                    }
+                }
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
                 var member = _mapper.Map<Member>(viewModel);
 
-                //Create
-                //If create then also register with Core identity.
-                if (viewModel.Id == 0)
+                var registerResult = await _userManager.CreateAsync(member, viewModel.Password);
+
+                if (!registerResult.Succeeded)
                 {
-                    var registerResult = await _userManager.CreateAsync(
-                        new Member
-                        {
-                            UserName = viewModel.Email,
-                            Email = viewModel.Email
-                        }, viewModel.Password);
-
-                    if (!registerResult.Succeeded)
+                    foreach(var error in registerResult.Errors)
                     {
-                        foreach(var error in registerResult.Errors)
-                        {
-                            ModelState.AddModelError("error", error.Description);
-                        }
-
-                        return View(viewModel);
+                        ModelState.AddModelError("error", error.Description);
                     }
 
-                    _context.Add(member);
+                    return View(viewModel);
                 }
-                //Edit
-                //TODO: Important remove possibility to change email 
-                //TODO: Fix password change.
-                else
-                {
-                    _context.Update(member);
-                }
-
-                _context.SaveChanges();
 
                 return RedirectToAction(nameof(Index));
             }
@@ -149,16 +156,12 @@ namespace GarageV2.Controllers
         /// Helper Action used for Remote validation for the Email uniqueness in the view class ViewModels/MemberAddOrEditViewModel.cs
         /// </summary>
         /// <param name="email">The email to check</param>
-        /// <param name="id">The member id</param>
         /// <returns></returns>
-        public IActionResult CheckIfEmailAlreadyExists(string email, string id)
+        public async Task<IActionResult> CheckIfEmailAlreadyExists(string email)
         {
-            if(email is null) 
-            {
-                return NotFound();
-            }
-            var foundMember = _context.Members.FirstOrDefault(p => p.Email.ToLower().Equals(email.ToLower()));
-            if (foundMember != null && foundMember.Id != id)
+
+            var foundMember = await _userManager.FindByEmailAsync(email);
+            if (foundMember != null)
             {
                 return Json($"E-post adressen {email} är redan registrerad");
             }
@@ -166,21 +169,29 @@ namespace GarageV2.Controllers
         }
 
         [Route("Member/Generate/{noMembers?}")]
-        public IActionResult GenerateMembers(int noMembers = 5)
+        public async Task<IActionResult> GenerateMembers(int noMembers = 5)
         {
-            var existingEmails = _context.Members.Select(m => m.Email).ToList();
-            for(int i = 0; i < noMembers; i++)
+            //Retrieve the existing emails to be able to verify the generated ones do not already exists.
+            var existingEmails = await _context.Members.Select(m => m.Email).ToListAsync();
+
+            int generatedMembers = 0;
+            while(generatedMembers < noMembers)
             {
-                var member = _parkedVehicleGenerator.GenerateMember();
-                //If email does noe exist
-                if(existingEmails.IndexOf(member.Email) == -1)
+                var generatedEmail = _parkedVehicleGenerator.GenerateEmail();
+
+                //If email does not exists
+                if (existingEmails.IndexOf(generatedEmail) == -1)
                 {
-                    existingEmails.Add(member.Email);
-                    _context.Add(member);
+                    var member = _parkedVehicleGenerator.GenerateMember(generatedEmail);
+                    var identityResult = await _userManager.CreateAsync(member, "secret123");
+
+                    if (identityResult.Succeeded)
+                    {
+                        existingEmails.Add(generatedEmail);
+                        generatedMembers++;
+                    }
                 }
             }
-
-            _context.SaveChanges();
 
             return RedirectToAction(nameof(Index));
         }

@@ -27,7 +27,7 @@ namespace GarageV2
             services.AddAutoMapper();
 
             //Service for generating vehicles
-            services.AddSingleton<ParkedVehicleGenerator>();
+            services.AddScoped<ParkedVehicleGenerator>();
 
             //Class for accessing the garage settings e.g garage price per minute.
             services.AddSingleton<GarageSettings>();
