@@ -25,13 +25,39 @@ namespace GarageV2.Services
             return new ParkedVehicle
             {
                 RegNo = GenerateRegNo(),
-                ParkedVehicleType = (VehicleType)_rnd.Next(5),
+                //ParkedVehicleType = (VehicleType)_rnd.Next(5),
                 Brand = "TheBrand",
                 Model = "TheModel",
                 Color = "TheColor",
                 NoWheels = _rnd.Next(10),
                 CheckIn = dateTime
             };
+        }
+
+        public Member GenerateMember()
+        {
+            return new Member
+            {
+                Email = GenerateEmail(),
+                FirstName = "First name",
+                LastName = "Last name",
+                PhoneNumber = _rnd.Next(1000000000).ToString()
+            };
+        }
+
+        private string GenerateEmail()
+        {
+            StringBuilder stb = new StringBuilder();
+
+            stb.Append((char)_rnd.Next(97, 122));
+            stb.Append((char)_rnd.Next(97, 122));
+            stb.Append((char)_rnd.Next(97, 122));
+            stb.Append((char)_rnd.Next(97, 122));
+            stb.Append((char)_rnd.Next(97, 122));
+            stb.Append((char)_rnd.Next(97, 122));
+            stb.Append("@gmail.com");
+
+            return stb.ToString();
         }
 
         /// <summary>

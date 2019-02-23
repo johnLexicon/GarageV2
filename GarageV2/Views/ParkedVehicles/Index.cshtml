@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<GarageV2.ViewModels.ParkedCarViewModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Parked Vehicles";
 }
 
 <h4>Parkering</h4>
@@ -12,8 +12,10 @@
     </p>
 *@
 <form asp-controller="ParkedVehicles" asp-action="Index">
+    <div class="form-group col-md-6">        
+    </div>
     <div>
-            <label for="search" class="">Reg-nummer: </label>
+            <label for="search" class="">Fritext: </label>
             <input id="search" class="" type="text" name="SearchString">
             <button type="submit" class="btn btn-primary">
                 <i class="fas fa-car"></i> Sök
@@ -25,10 +27,13 @@
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.Member)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.RegNo)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ParkedVehicleType)
+                @Html.DisplayNameFor(model => model.VehicleType)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Brand)
@@ -51,38 +56,41 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.RegNo)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ParkedVehicleType)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Brand)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Model)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Color)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FormatedTimeParked)
-                </td>
-                <td>
-                    <a asp-action="AddOrEdit" asp-route-id="@item.Id"><i class="fas fa-edit"></i> Ändra</a>
-                    <a asp-action="Details" asp-route-id="@item.Id"><i class="fas fa-info-circle fa-lg"></i> Info</a>
-                    <a asp-action="DeleteConfirmed" asp-route-id="@item.Id" class="text-danger ml-1"><i class="fas fa-car"></i> Utcheckning</a>
-                </td>
-                @*
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                    </td>
-                *@
-            </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Member.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RegNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VehicleType.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Brand)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Model)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Color)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FormatedTimeParked)
+            </td>
+            <td>
+                <a asp-action="AddOrEdit" asp-route-id="@item.Id"><i class="fas fa-edit"></i> Ändra</a>
+                <a asp-action="Details" asp-route-id="@item.Id"><i class="fas fa-info-circle fa-lg"></i> Info</a>
+                <a asp-action="DeleteConfirmed" asp-route-id="@item.Id" class="text-danger ml-1"><i class="fas fa-car"></i> Utcheckning</a>
+            </td>
+            @*
+        <td>
+            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+        </td>
+            *@
+        </tr>
         }
     </tbody>
 </table>
