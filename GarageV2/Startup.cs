@@ -10,6 +10,7 @@ using GarageV2.Services;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace GarageV2
 {
@@ -91,24 +92,33 @@ namespace GarageV2
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
+            CreateRoles(serviceProvider);
             CreateAdmin(serviceProvider);
         }
 
 
-        public void CreateAdmin(IServiceProvider serviceProvider)
+        private void CreateRoles(IServiceProvider serviceProvider)
         {
-            var userManager = serviceProvider.GetRequiredService<UserManager<Member>>();
+            string[] roles = { "Administrator", "Member" };
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-            Task<bool> adminRoleExists = roleManager.RoleExistsAsync("Administrator");
-            adminRoleExists.Wait();
-
-            //Creates the admin role if it does not already exists.
-            if (!adminRoleExists.Result)
+            foreach(var role in roles)
             {
-                Task<IdentityResult> identityResult = roleManager.CreateAsync(new IdentityRole("Administrator"));
-                identityResult.Wait();
+                Task<bool> roleExistsTask = roleManager.RoleExistsAsync(role);
+                roleExistsTask.Wait();
+                if (!roleExistsTask.Result)
+                {
+                    Task<IdentityResult> createRoleTask = roleManager.CreateAsync(new IdentityRole(role));
+                    createRoleTask.Wait();
+                }
             }
+        }
+
+
+        private void CreateAdmin(IServiceProvider serviceProvider)
+        {
+
+            var userManager = serviceProvider.GetRequiredService<UserManager<Member>>();
 
             var adminUserEmail = "john.lundgren.lexicon@gmail.com";
             Task<Member> administrator = userManager.FindByEmailAsync(adminUserEmail);

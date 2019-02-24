@@ -29,7 +29,7 @@ namespace GarageV2.Controllers
             _userManager = userManager;
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Index(string searchString)
         {
             // Query for retrieving all members
@@ -149,7 +149,7 @@ namespace GarageV2.Controllers
                 return View(viewModel);
             }
 
-
+            await _userManager.AddToRoleAsync(member, "Member");
 
             return RedirectToAction(nameof(Index));
 
