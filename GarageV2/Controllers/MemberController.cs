@@ -6,6 +6,7 @@ using AutoMapper.QueryableExtensions;
 using GarageV2.Models;
 using GarageV2.Services;
 using GarageV2.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GarageV2.Controllers
 {
+
     public class MemberController : Controller
     {
 
@@ -26,7 +28,8 @@ namespace GarageV2.Controllers
             _parkedVehicleGenerator = parkedVehicleGenerator;
             _userManager = userManager;
         }
-        
+
+        [Authorize]
         public async Task<IActionResult> Index(string searchString)
         {
             // Query for retrieving all members
@@ -127,26 +130,29 @@ namespace GarageV2.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel viewModel)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var member = _mapper.Map<Member>(viewModel);
-
-                var registerResult = await _userManager.CreateAsync(member, viewModel.Password);
-
-                if (!registerResult.Succeeded)
-                {
-                    foreach(var error in registerResult.Errors)
-                    {
-                        ModelState.AddModelError("error", error.Description);
-                    }
-
-                    return View(viewModel);
-                }
-
-                return RedirectToAction(nameof(Index));
+                return View(viewModel);
             }
 
-            return View(viewModel);
+            var member = _mapper.Map<Member>(viewModel);
+
+            var registerResult = await _userManager.CreateAsync(member, viewModel.Password);
+
+            if (!registerResult.Succeeded)
+            {
+                foreach (var error in registerResult.Errors)
+                {
+                    ModelState.AddModelError("error", error.Description);
+                }
+
+                return View(viewModel);
+            }
+
+
+
+            return RedirectToAction(nameof(Index));
+
         }
 
         /// <summary>

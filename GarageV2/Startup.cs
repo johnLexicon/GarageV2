@@ -69,6 +69,14 @@ namespace GarageV2
             //For using custom Error404 page.
             app.UseStatusCodePagesWithRedirects("/Home/Error404");
 
+
+            //Before UseMvc and UseIdentityServer
+            //Using UseIdentity implies using app.UseCookieAuthentication()
+            //app.UseIdentity();
+
+            //Before UseMvc
+            //app.UseIdentityServer();
+
             //Needs to be implemented before useMvc.
             //Middleware that handles the cookies used for the Core Identity.
             app.UseAuthentication();
