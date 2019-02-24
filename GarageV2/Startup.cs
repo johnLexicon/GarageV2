@@ -8,6 +8,8 @@ using GarageV2.Models;
 using AutoMapper;
 using GarageV2.Services;
 using Microsoft.AspNetCore.Identity;
+using System;
+using System.Threading.Tasks;
 
 namespace GarageV2
 {
@@ -19,6 +21,7 @@ namespace GarageV2
         }
 
         public IConfiguration Configuration { get; }
+
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -50,7 +53,7 @@ namespace GarageV2
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -87,6 +90,52 @@ namespace GarageV2
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            CreateAdmin(serviceProvider);
+        }
+
+
+        public void CreateAdmin(IServiceProvider serviceProvider)
+        {
+            var userManager = serviceProvider.GetRequiredService<UserManager<Member>>();
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+            Task<bool> adminRoleExists = roleManager.RoleExistsAsync("Administrator");
+            adminRoleExists.Wait();
+
+            //Creates the admin role if it does not already exists.
+            if (!adminRoleExists.Result)
+            {
+                Task<IdentityResult> identityResult = roleManager.CreateAsync(new IdentityRole("Administrator"));
+                identityResult.Wait();
+            }
+
+            var adminUserEmail = "john.lundgren.lexicon@gmail.com";
+            Task<Member> administrator = userManager.FindByEmailAsync(adminUserEmail);
+            administrator.Wait();
+
+            //Creates the administrator user if it does not already exists.
+            if(administrator.Result is null)
+            {
+                Member member = new Member
+                {
+                    FirstName = "John",
+                    LastName = "Lundgren",
+                    Email = adminUserEmail,
+                    UserName = adminUserEmail
+                };
+
+                Task<IdentityResult> createAdmin = userManager.CreateAsync(member, "secret123");
+                createAdmin.Wait();
+
+                //If the admin user was succesfully created it adds the Administrator role to the user.
+                if (createAdmin.Result.Succeeded)
+                {
+                    Task<IdentityResult> addToRoleResult = userManager.AddToRoleAsync(member, "Administrator");
+                    addToRoleResult.Wait();
+                }
+
+            }
         }
     }
 }
